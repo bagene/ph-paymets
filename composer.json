@@ -1,0 +1,23 @@
+{
+    "name": "bagene/ph-payments",
+    "description": "A Package container for different PH compatible payment providers",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bagene\\PhPayments\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gene Navera",
+            "email": "gnavera@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.21"
+    }
+}
