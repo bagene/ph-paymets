@@ -2,10 +2,10 @@
 
 namespace Bagene\PhPayments\Xendit;
 
-use Bagene\PhPayments\AbstractGateway;
+use Bagene\PhPayments\PaymentGateway;
 use Illuminate\Http\Request;
 
-class XenditGateway extends AbstractGateway implements XenditGatewayInterface
+final class XenditGateway extends PaymentGateway implements XenditGatewayInterface
 {
     use XenditTraits;
     protected string $secretKey;
@@ -13,7 +13,7 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
     protected string $apiKey;
     protected array $paymentMethods;
     protected string $defaultCurrency;
-    public function __construct(array $args = [])
+    final public function __construct(array $args = [])
     {
         $this->secretKey = config('payments.xendit.secret_key') ?? $args['secret_key'] ?? '';
         $this->webhookKey = config('payments.xendit.webhook_token') ?? $args['webhook_token'] ?? '';
@@ -22,7 +22,7 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         $this->authenticate();
     }
 
-    public static function initGateway(?array $args = []): self
+    final public static function initGateway(?array $args = []): self
     {
         return new self($args);
     }
@@ -35,12 +35,12 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         ];
     }
 
-    public function authenticate(): void
+    final public function authenticate(): void
     {
         $this->apiKey = base64_encode($this->secretKey . ':');
     }
 
-    public function getInvoice(string $id = '', ?string $externalId = null): array
+    final public function getInvoice(string $id = '', ?string $externalId = null): array
     {
         if (!empty($externalId)) {
             return $this->sendRequest(
@@ -56,7 +56,7 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         );
     }
 
-    public function createInvoice(?array $data = []): array
+    final public function createInvoice(?array $data = []): array
     {
         $this->validateXenditPayload($data);
         $data = array_merge($data, [
@@ -71,7 +71,7 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         );
     }
 
-    public function cancelInvoice(string $id): array
+    final public function cancelInvoice(string $id): array
     {
         return $this->sendRequest(
             'POST',
@@ -79,7 +79,7 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         );
     }
 
-    public function parseWebhookPayload(array|Request $request, ?array $headers = []): array
+    final public function parseWebhookPayload(array|Request $request, ?array $headers = []): array
     {
         $headers = parent::parseWebhookPayload($request, $headers);
 
@@ -97,5 +97,15 @@ class XenditGateway extends AbstractGateway implements XenditGatewayInterface
         $this->cacheWebhookId($webhookId, 'xendit-webhook', false);
 
         return $request;
+    }
+
+    public function createQR(array $data): string
+    {
+        $this->validatePayload('QR_PAYLOAD_REQUIRED_KEYS', $data);
+        return $this->sendRequest(
+            'POST',
+            $this->getEndpoint(static::QR_ENDPOINT),
+            $data
+        )['qr_string'] ?? '';
     }
 }

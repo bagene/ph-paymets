@@ -13,6 +13,7 @@ interface PaymentGatewayInferface
      * @param array $args
      */
     public function __construct(array $args = []);
+    public static function getGateway(string $gateway, array $args = []): PaymentGateway;
 
     /**
      * Initialize gateway statically (without constructor)

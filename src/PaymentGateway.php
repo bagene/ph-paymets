@@ -9,8 +9,19 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 
-abstract class AbstractGateway implements XenditGatewayInterface
+abstract class PaymentGateway implements XenditGatewayInterface
 {
+    public static function getGateway(string $gateway, array $args = []): PaymentGateway
+    {
+        $gateway = ucfirst($gateway);
+        $gatewayClass = "Bagene\\PhPayments\\{$gateway}\\{$gateway}Gateway";
+        if (!class_exists($gatewayClass)) {
+            throw new \InvalidArgumentException("Invalid gateway: {$gateway}");
+        }
+
+        return new $gatewayClass($args);
+    }
+
     protected function getEndpoint(string $endpoint): string
     {
         $baseUrl = config('payments.xendit.is_production')
