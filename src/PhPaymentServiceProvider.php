@@ -9,12 +9,11 @@ class PhPaymentServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/payments.php' => config_path('payments.php'),
+            __DIR__ . '/config/payments.php' => config_path('payments.php'),
         ], 'config');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/payments.php', 'payments');
     }
 }
