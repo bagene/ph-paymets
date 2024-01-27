@@ -11,6 +11,7 @@ class PhPaymentServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/config/payments.php' => config_path('payments.php'),
         ], 'config');
+        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
     }
 
     public function register()
