@@ -2,6 +2,7 @@
 
 namespace Bagene\PhPayments\Controllers;
 
+use Bagene\PhPayments\PaymentGateway;
 use Bagene\PhPayments\WebhookInterface;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Bagene\PhPayments\Xendit\XenditWebhookInterface;
@@ -12,9 +13,9 @@ class XenditWebhookController extends Controller implements WebhookControllerInt
 {
     protected XenditGatewayInterface $gateway;
     protected XenditWebhookInterface $webhook;
-    public function __construct(XenditGatewayInterface $gateway, XenditWebhookInterface $webhook)
+    public function __construct(XenditWebhookInterface $webhook)
     {
-        $this->gateway = $gateway;
+        $this->gateway = PaymentGateway::getGateway('xendit');
         $this->webhook = $webhook;
     }
     public function parse(Request $request)
