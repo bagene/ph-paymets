@@ -4,5 +4,5 @@ namespace Bagene\PhPayments;
 
 interface WebhookInterface
 {
-    public function updateStatus($payload): void;
+    public function updateStatus(array $payload): void;
 }

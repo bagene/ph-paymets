@@ -4,7 +4,7 @@ namespace Bagene\PhPayments\Xendit;
 
 use Bagene\PhPayments\WebhookInterface;
 
-interface XenditWebhook extends WebhookInterface
+interface XenditWebhookInterface extends WebhookInterface
 {
 
 }
