@@ -6,5 +6,4 @@ use Bagene\PhPayments\WebhookInterface;
 
 interface XenditWebhookInterface extends WebhookInterface
 {
-
 }

@@ -4,7 +4,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bagene\\PhPayments\\": "src/"
+            "Bagene\\PhPayments\\": "src/",
+            "App\\Services\\": "src/Services/"
         }
     },
     "autoload-dev": {

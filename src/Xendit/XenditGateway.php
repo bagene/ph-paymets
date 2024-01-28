@@ -83,7 +83,7 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
     {
         $headers = parent::parseWebhookPayload($request, $headers);
 
-        if ($headers['x-callback-token'] !== $this->webhookKey) {
+        if ($headers['x-callback-token'][0] != $this->webhookKey) {
             throw new \InvalidArgumentException('Invalid webhook token');
         }
 

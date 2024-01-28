@@ -2,7 +2,9 @@
 
 namespace Bagene\PhPayments;
 
+use Illuminate\Http\Response;
+
 interface WebhookInterface
 {
-    public function updateStatus(array $payload): void;
+    public function handle(array $payload): ?Response;
 }
