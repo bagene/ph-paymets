@@ -11,6 +11,11 @@ use Illuminate\Http\Request;
 
 abstract class PaymentGateway implements XenditGatewayInterface
 {
+    public function __construct(array $args = [], ?Client $client = null)
+    {
+        $this->client = $client ?? new Client();
+    }
+
     public static function getGateway(string $gateway, array $args = []): PaymentGateway
     {
         $gateway = ucfirst($gateway);
@@ -22,45 +27,7 @@ abstract class PaymentGateway implements XenditGatewayInterface
         return new $gatewayClass($args);
     }
 
-    protected function getEndpoint(string $endpoint): string
-    {
-        $baseUrl = config('payments.xendit.is_production')
-            ? static::PRODUCTION_BASE_URL
-            : static::SANDBOX_BASE_URL;
-        return $baseUrl . $endpoint;
-    }
-
-    /**
-     * @param string $method
-     * @param string $endpoint
-     * @param array $data
-     * @return mixed
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    protected function sendRequest(string $method, string $endpoint, array $data = []): array
-    {
-        $client = new Client();
-        $headers = $this->getHeaders();
-        $options = [
-            'headers' => $headers,
-        ];
-        if ($method === 'GET') {
-            $options['query'] = $data;
-        } else {
-            $options['json'] = $data;
-        }
-
-        try {
-            $response = $client->request($method, $endpoint, $options);
-            $body = $response->getBody();
-            return json_decode($body, true);
-        } catch (ClientException $e) {
-            throw new RequestException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
-    protected function validatePayload(string $type, array $data): void
+    public function validatePayload(string $type, array $data): void
     {
         $constName = 'static::' . $type;
         if (!defined($constName)) {

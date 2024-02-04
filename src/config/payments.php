@@ -2,6 +2,7 @@
 
 return [
     'xendit' => [
+        'is_production' => env('XENDIT_IS_PRODUCTION', false),
         'secret_key' => env('XENDIT_SECRET_KEY'),
         'webhook_token' => env('XENDIT_WEBHOOK_TOKEN'),
         'default_currency' => 'PHP',
