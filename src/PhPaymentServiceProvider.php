@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 
 class PhPaymentServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/config/payments.php' => config_path('payments.php'),
@@ -23,7 +23,7 @@ class PhPaymentServiceProvider extends ServiceProvider
         ], 'services');
     }
 
-    public function register()
+    public function register(): void
     {
         $this->app->bind(XenditGatewayInterface::class, XenditGateway::class);
         $this->app->bind(XenditWebhookInterface::class, XenditWebhookService::class);

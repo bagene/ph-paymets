@@ -14,22 +14,17 @@ use Illuminate\Http\Request;
 final class XenditGateway extends PaymentGateway implements XenditGatewayInterface
 {
     use XenditTraits;
-    protected string $secretKey;
-    protected string $webhookKey;
-    protected string $apiKey;
-    protected array $paymentMethods;
-    protected string $defaultCurrency;
+    public string $secretKey;
+    public string $webhookKey;
+    public string $apiKey;
+    public array $paymentMethods;
+    public string $defaultCurrency;
     final public function __construct(array $args = [], ?Client $client = null)
     {
         parent::__construct($args, $client);
         $this->secretKey = config('payments.xendit.secret_key') ?? $args['secret_key'] ?? '';
         $this->webhookKey = config('payments.xendit.webhook_token') ?? $args['webhook_token'] ?? '';
         $this->authenticate();
-    }
-
-    final public static function initGateway(?array $args = []): self
-    {
-        return new self($args);
     }
 
     public function getHeaders(): array
@@ -53,14 +48,35 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
 
     final public function createInvoice(?array $data = []): XenditInvoiceResponse
     {
-        $this->validateXenditPayload($data);
         $request = new XenditCreateInvoiceRequest($this->getHeaders(), $data);
         return $request->send();
     }
 
+    final public function createQR(array $data): XenditQRResponse
+    {
+        $request = new XenditQRRequest($this->getHeaders(), $data);
+        return $request->send();
+    }
+
+    final protected function verifyWebhook(array|Request $request, ?array $headers = []): array
+    {
+        if (
+            empty($request->headers->get(static::WEBHOOK_HEADER_KEYS))
+            && empty($headers[static::WEBHOOK_HEADER_KEYS])
+        ) {
+            throw new \InvalidArgumentException('Missing required header: x-callback-token');
+        }
+
+        if ($request instanceof Request) {
+            return $request->headers->all();
+        }
+
+        return $headers ?? [];
+    }
+
     final public function parseWebhookPayload(array|Request $request, ?array $headers = []): array
     {
-        $headers = parent::parseWebhookPayload($request, $headers);
+        $headers = $this->verifyWebhook($request, $headers);
 
         if ($headers['x-callback-token'][0] != $this->webhookKey) {
             throw new \InvalidArgumentException('Invalid webhook token');
@@ -76,11 +92,5 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
         $this->cacheWebhookId($webhookId, 'xendit-webhook', false);
 
         return $request;
-    }
-
-    public function createQR(array $data): XenditQRResponse
-    {
-        $request = new XenditQRRequest($this->getHeaders(), $data);
-        return $request->send();
     }
 }

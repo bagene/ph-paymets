@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace Bagene\PhPayments\Tests\Unit;
 
+use Bagene\PhPayments\Helpers\PaymentBuilder;
 use Bagene\PhPayments\PaymentGateway;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\Tests\PaymentsTestCase;
@@ -13,11 +14,12 @@ use Orchestra\Testbench\Attributes\DefineEnvironment;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ServerBag;
 
-final class PaymentGatewayTest extends PaymentsTestCase
+final class PaymentGatewayTest extends \Orchestra\Testbench\TestCase
 {
     public function testShouldGetGateway(): void
     {
-        $gateway = PaymentGateway::getGateway('xendit');
+        $this->app;
+        $gateway = PaymentBuilder::setGateway('xendit');
         $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
     }
 
@@ -26,28 +28,37 @@ final class PaymentGatewayTest extends PaymentsTestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid gateway: NON_EXISTING_GATEWAY');
 
-        PaymentGateway::getGateway('NON_EXISTING_GATEWAY');
+        PaymentBuilder::setGateway('NON_EXISTING_GATEWAY');
     }
 
-    public function testValidatePayloadThrowInvalidTypeException(): void
+    public function testShouldSetAttribute(): void
     {
-        $data = [];
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid type: NON_EXISTING_PAYLOAD');
-
-        $gateway = PaymentGateway::getGateway('xendit');
-        $gateway->validatePayload('NON_EXISTING_PAYLOAD', $data);
+        $gateway = PaymentBuilder::setGateway('xendit');
+        $gateway->setAttribute('secretKey', 'secret');
+        $gateway->setAttribute('webhookKey', 'webhook');
+        $gateway->setAttribute('apiKey', 'api_key');
+        $this->assertEquals('secret', $gateway->secretKey);
+        $this->assertEquals('webhook', $gateway->webhookKey);
+        $this->assertEquals('api_key', $gateway->apiKey);
     }
 
-    public function testValidatePayloadThrowMissingRequiredKeyException(): void
+    public function testShouldSetAttributes(): void
     {
-        $data = ['amount' => 100];
+        $gateway = PaymentBuilder::setGateway('xendit');
+        $gateway->setAttributes([
+            'secretKey' => 'secret',
+            'webhookKey' => 'webhook',
+            'apiKey' => 'api_key',
+        ]);
+        $this->assertEquals('secret', $gateway->secretKey);
+        $this->assertEquals('webhook', $gateway->webhookKey);
+        $this->assertEquals('api_key', $gateway->apiKey);
+    }
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Missing required key: external_id');
-
-        $gateway = PaymentGateway::getGateway('xendit');
-        $gateway->validatePayload('INVOICE_PAYLOAD_REQUIRED_KEYS', $data);
+    public function testShouldCacheWebhookId(): void
+    {
+        $gateway = PaymentBuilder::setGateway('xendit');
+        $gateway->cacheWebhookId('id');
+        $this->assertTrue(cache()->has('webhook-id'));
     }
 }

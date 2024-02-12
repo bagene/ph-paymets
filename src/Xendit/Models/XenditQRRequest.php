@@ -28,10 +28,28 @@ class XenditQRRequest extends Request implements XenditRequestInterface
 
     public function send(): XenditQRResponse
     {
-        // TODO: Validate the request body
-
         $response = parent::sendRequest();
 
         return new XenditQRResponse($response);
+    }
+
+    protected function setRequireFields(): void
+    {
+        $this->requiredFields = [
+            'reference_id',
+            'type',
+            'currency',
+        ];
+    }
+
+    public function validate(string ...$fields): void
+    {
+        $fields = $this->requiredFields;
+        parent::validate(...$fields);
+
+        // Conditional Validation for Amount
+        if ($this->body['type'] === 'STATIC') {
+            parent::validate('amount');
+        }
     }
 }

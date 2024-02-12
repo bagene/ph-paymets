@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 
 interface BaseRequest
 {
+    public function validate(string ...$fields): void;
     public function getHeaders(): array;
 
     public function getBody(): array;
@@ -13,4 +14,6 @@ interface BaseRequest
     public function setDefaults(): void;
 
     public function sendRequest(): ResponseInterface;
+
+    public function toArray(): array;
 }

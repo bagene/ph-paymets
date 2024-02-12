@@ -25,5 +25,15 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.21"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bagene\\PhPayments\\PhPaymentServiceProvider"
+            ],
+            "aliases": [
+                "PaymentBuilder": "Bagene\\PhPayments\\Helpers\\PaymentBuilder"
+            ]
+        }
     }
 }

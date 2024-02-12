@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 interface PaymentGatewayInferface
 {
+    public function setAttribute(string $name, mixed $value): PaymentGatewayInferface;
+    public function setAttributes(array $attributes): PaymentGatewayInferface;
+
     /**
      * PaymentGateway constructor.
      * For Laravel, argument would be optional and will be filled with config('payments')
@@ -15,12 +18,6 @@ interface PaymentGatewayInferface
      */
     public function __construct(array $args = [], ?Client $client = null);
     public function getHeaders();
-    public static function getGateway(string $gateway, array $args = []): PaymentGateway;
-
-    /**
-     * Initialize gateway statically (without constructor)
-     */
-    public static function initGateway(?array $args = []): self;
 
     /**
      * Authenticate to the gateway
@@ -31,11 +28,11 @@ interface PaymentGatewayInferface
     /**
      * Get invoice by ID or external ID
      */
-    public function getInvoice(string $id = '', ?string $externalId = null): BaseResponse;
+    public function getInvoice(string $id = '', ?string $externalId = null): ?BaseResponse;
     /**
      * Create invoice
      */
-    public function createInvoice(?array $data = []): BaseResponse;
+    public function createInvoice(?array $data = []): ?BaseResponse;
 
     /**
      * Validate and Parse Webhook payload

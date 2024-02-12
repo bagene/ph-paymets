@@ -1,0 +1,3 @@
+providers:
+  - Bagene\PhPayments\PhPaymentsServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
