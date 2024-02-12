@@ -31,9 +31,9 @@
             "providers": [
                 "Bagene\\PhPayments\\PhPaymentServiceProvider"
             ],
-            "aliases": [
+            "aliases": {
                 "PaymentBuilder": "Bagene\\PhPayments\\Helpers\\PaymentBuilder"
-            ]
+            }
         }
     }
 }
