@@ -33,8 +33,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bagene\\PhPayments\\PhPaymentServiceProvider",
-                "App\\Providers\\WorkbenchServiceProvider"
+                "Bagene\\PhPayments\\PhPaymentServiceProvider"
             ],
             "aliases": {
                 "PaymentBuilder": "Bagene\\PhPayments\\Helpers\\PaymentBuilder"
