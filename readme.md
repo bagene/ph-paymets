@@ -28,14 +28,22 @@ $response = $gateway->createInvoice([
     'failure_redirect_url' => 'https://example.org/failure',
 ]);
 
-echo $response->getId();
-echo $response->getExternalId();
+dump($response->getId());
+dump($response->getExternalId());
 
-$response = $gateway->getInvoice('invoice-123');
-
-echo $response->getId();
-echo $response->getExternalId();
+return redirect()->away($response->getInvoiceUrl());
 ```
+
+## Methods
+
+```php
+createInvoice(array $data)
+getInvoice(string $id)
+createQrCode(string $id) - If supported
+```
+
+## Webhooks
+- Under Construction
 
 ## Supported Gateways
 - Xendit 
@@ -47,5 +55,4 @@ echo $response->getExternalId();
 - Maya - Under Consstruction
 
 ## License
-MIT
-```
+This package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
