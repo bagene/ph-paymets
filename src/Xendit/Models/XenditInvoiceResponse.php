@@ -2,10 +2,11 @@
 
 namespace Bagene\PhPayments\Xendit\Models;
 
+use Bagene\PhPayments\Requests\BaseResponse;
 use Bagene\PhPayments\Requests\Response;
 use Psr\Http\Message\ResponseInterface;
 
-class XenditInvoiceResponse extends Response
+class XenditInvoiceResponse extends Response implements BaseResponse
 {
     protected string $id;
     protected string $externalId;
@@ -21,7 +22,7 @@ class XenditInvoiceResponse extends Response
     protected string $updated;
     protected array $items;
 
-    public function setResponse(ResponseInterface $response): void
+    protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
 
@@ -85,11 +86,6 @@ class XenditInvoiceResponse extends Response
     public function getInvoiceUrl(): string
     {
         return $this->invoiceUrl;
-    }
-
-    public function getCustomer(): ?array
-    {
-        return $this->customer;
     }
 
     public function getCreated(): string

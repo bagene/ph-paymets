@@ -9,7 +9,7 @@ abstract class MayaInvoiceResponse extends Response
 {
     protected string $redirectUrl;
 
-    public function setResponse(ResponseInterface $response): void
+    protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
         $this->redirectUrl = $this->body['redirectUrl'];

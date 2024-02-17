@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 final class MayaCheckoutResponse extends MayaInvoiceResponse
 {
     protected string $checkoutId;
-    public function setResponse(ResponseInterface $response): void
+    protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
 

@@ -2,10 +2,11 @@
 
 namespace Bagene\PhPayments\Xendit\Models;
 
+use Bagene\PhPayments\Requests\BaseResponse;
 use Bagene\PhPayments\Requests\Response;
 use Psr\Http\Message\ResponseInterface;
 
-class XenditQRResponse extends Response
+class XenditQrResponse extends Response implements BaseResponse
 {
     public string $id;
     public string $referenceId;
@@ -15,11 +16,11 @@ class XenditQRResponse extends Response
     public string $status;
     public string $channelCode;
     public string $qrString;
-    public string $exiresAt;
+    public string $expiresAt;
     public string $created;
     public string $updated;
     public array $basket;
-    public function setResponse(ResponseInterface $response): void
+    protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
 
@@ -31,7 +32,7 @@ class XenditQRResponse extends Response
         $this->status = $this->body['status'];
         $this->channelCode = $this->body['channel_code'];
         $this->qrString = $this->body['qr_string'];
-        $this->exiresAt = $this->body['expires_at'];
+        $this->expiresAt = $this->body['expires_at'];
         $this->created = $this->body['created'];
         $this->updated = $this->body['updated'];
         $this->basket = $this->body['basket'];
@@ -77,9 +78,9 @@ class XenditQRResponse extends Response
         return $this->qrString;
     }
 
-    public function getExiresAt(): string
+    public function getExpiresAt(): string
     {
-        return $this->exiresAt;
+        return $this->expiresAt;
     }
 
     public function getCreated(): string

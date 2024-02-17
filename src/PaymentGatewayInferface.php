@@ -2,8 +2,10 @@
 
 namespace Bagene\PhPayments;
 
+use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\Requests\BaseResponse;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 
 interface PaymentGatewayInferface
@@ -27,10 +29,14 @@ interface PaymentGatewayInferface
 
     /**
      * Get invoice by ID or external ID
+     * @throws RequestException
+     * @throws GuzzleException
      */
     public function getInvoice(string $id = '', ?string $externalId = null): ?BaseResponse;
     /**
      * Create invoice
+     * @throws RequestException
+     * @throws GuzzleException
      */
     public function createInvoice(?array $data = []): ?BaseResponse;
 

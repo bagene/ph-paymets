@@ -3,11 +3,7 @@
 namespace Bagene\PhPayments;
 
 use Bagene\PhPayments\Exceptions\RequestException;
-use Bagene\PhPayments\Maya\MayaGatewayInterface;
-use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 
 abstract class PaymentGateway implements PaymentGatewayInferface
@@ -46,27 +42,15 @@ abstract class PaymentGateway implements PaymentGatewayInferface
 
     public abstract function parseWebhookPayload(array|Request $request, ?array $headers = []): array;
 
-    public function cacheWebhookId(string $id, string $cacheKey = 'webhook', $isLaravel = true): void
+    /**
+     * @throws RequestException
+     */
+    public function cacheWebhookId(string $cacheKey = 'webhook'): void
     {
-        $cacheKey = $cacheKey . '-' . $id;
-        if ($isLaravel) {
-            if (cache()->has($cacheKey)) {
-                throw new \InvalidArgumentException('Duplicate webhook');
-            }
-
-            cache()->put($cacheKey, $id, 60);
-            return;
+        if (cache()->has($cacheKey)) {
+            throw new RequestException('Duplicate webhook');
         }
 
-        if (file_exists("cache/{$cacheKey}")) {
-            $expireTime = file_get_contents("cache/{$cacheKey}-expire");
-            if ($expireTime > time()) {
-                throw new \InvalidArgumentException('Duplicate webhook');
-            }
-        }
-
-        file_put_contents("cache/{$cacheKey}", 'true');
-        $expireTime = time() + 60;
-        file_put_contents("cache/{$cacheKey}-expire", $expireTime);
+        cache()->put($cacheKey, true, 60);
     }
 }

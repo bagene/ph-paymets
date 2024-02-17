@@ -14,7 +14,7 @@ abstract class Response implements BaseResponse
         $this->setResponse($response);
     }
 
-    public function setResponse(ResponseInterface $response): void
+    protected function setResponse(ResponseInterface $response): void
     {
         $this->headers = $response->getHeaders();
         $this->body = json_decode($response->getBody(), true);

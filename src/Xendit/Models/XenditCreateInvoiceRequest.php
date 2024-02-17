@@ -35,23 +35,9 @@ class XenditCreateInvoiceRequest extends Request implements XenditRequestInterfa
         return 'POST';
     }
 
-    /**
-     * @return XenditInvoiceResponse
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function send(): XenditInvoiceResponse
+    protected function getRequiredFields(): array
     {
-        $this->validate(...$this->requiredFields);
-
-        $response = parent::sendRequest();
-
-        return new XenditInvoiceResponse($response);
-    }
-
-    protected function setRequireFields(): void
-    {
-        $this->requiredFields = [
+        return [
             'external_id',
             'amount',
         ];

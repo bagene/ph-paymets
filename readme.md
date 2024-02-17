@@ -28,12 +28,23 @@ $response = $gateway->createInvoice([
     'failure_redirect_url' => 'https://example.org/failure',
 ]);
 
-$gateway->getInvoice('invoice-123');
+echo $response->getId();
+echo $response->getExternalId();
+
+$response = $gateway->getInvoice('invoice-123');
+
+echo $response->getId();
+echo $response->getExternalId();
 ```
 
 ## Supported Gateways
-- Xendit
-- Maya
+- Xendit 
+  - Supported Features: 
+    - Create Invoice
+    - Get Invoice
+    - Create QR Code
+    - Webhooks
+- Maya - Under Consstruction
 
 ## License
 MIT

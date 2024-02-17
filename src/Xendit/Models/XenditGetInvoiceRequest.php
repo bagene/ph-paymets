@@ -27,11 +27,4 @@ class XenditGetInvoiceRequest extends Request implements XenditRequestInterface
     {
         return 'GET';
     }
-
-    public function send(): XenditInvoiceResponse
-    {
-        $response = parent::sendRequest();
-
-        return new XenditInvoiceResponse($response);
-    }
 }

@@ -6,7 +6,7 @@ use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\Maya\Models\MayaCreateInvoiceRequest;
 use Bagene\PhPayments\Maya\Models\MayaInvoiceResponse;
 use Bagene\PhPayments\PaymentGateway;
-use Bagene\PhPayments\Xendit\Models\XenditQRResponse;
+use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;

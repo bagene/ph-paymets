@@ -4,7 +4,7 @@ namespace Bagene\PhPayments\Xendit\Models;
 
 use Bagene\PhPayments\Requests\Request;
 
-class XenditQRRequest extends Request implements XenditRequestInterface
+class XenditQrRequest extends Request implements XenditRequestInterface
 {
     public function setDefaults(): void
     {
@@ -26,16 +26,9 @@ class XenditQRRequest extends Request implements XenditRequestInterface
         return 'POST';
     }
 
-    public function send(): XenditQRResponse
+    protected function getRequiredFields(): array
     {
-        $response = parent::sendRequest();
-
-        return new XenditQRResponse($response);
-    }
-
-    protected function setRequireFields(): void
-    {
-        $this->requiredFields = [
+        return [
             'reference_id',
             'type',
             'currency',

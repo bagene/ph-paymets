@@ -2,8 +2,10 @@
 
 namespace Bagene\PhPayments\Xendit;
 
+use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\PaymentGatewayInferface;
-use Bagene\PhPayments\Xendit\Models\XenditQRResponse;
+use Bagene\PhPayments\Requests\BaseResponse;
+use GuzzleHttp\Exception\GuzzleException;
 
 interface XenditGatewayInterface extends PaymentGatewayInferface
 {
@@ -23,5 +25,10 @@ interface XenditGatewayInterface extends PaymentGatewayInferface
     ];
     const WEBHOOK_HEADER_KEYS = 'x-callback-token';
 
-    public function createQR(array $data): XenditQRResponse;
+    /**
+     * Create QR
+     * @throws RequestException
+     * @throws GuzzleException
+     */
+    public function createQR(array $data): BaseResponse;
 }

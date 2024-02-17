@@ -1,24 +1,17 @@
 <?php
 
 declare(strict_types=1);
-namespace Bagene\PhPayments\Tests\Unit;
+namespace Bagene\PhPayments\Tests\Integration;
 
 use Bagene\PhPayments\Helpers\PaymentBuilder;
-use Bagene\PhPayments\PaymentGateway;
-use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\Tests\PaymentsTestCase;
-use Bagene\PhPayments\Xendit\XenditGateway;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
-use Illuminate\Http\Request;
-use Orchestra\Testbench\Attributes\DefineEnvironment;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\ServerBag;
+use Orchestra\Testbench\TestCase;
 
-final class PaymentGatewayTest extends \Orchestra\Testbench\TestCase
+final class PaymentGatewayTest extends TestCase
 {
     public function testShouldGetGateway(): void
     {
-        $this->app;
         $gateway = PaymentBuilder::setGateway('xendit');
         $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
     }
@@ -53,12 +46,5 @@ final class PaymentGatewayTest extends \Orchestra\Testbench\TestCase
         $this->assertEquals('secret', $gateway->secretKey);
         $this->assertEquals('webhook', $gateway->webhookKey);
         $this->assertEquals('api_key', $gateway->apiKey);
-    }
-
-    public function testShouldCacheWebhookId(): void
-    {
-        $gateway = PaymentBuilder::setGateway('xendit');
-        $gateway->cacheWebhookId('id');
-        $this->assertTrue(cache()->has('webhook-id'));
     }
 }

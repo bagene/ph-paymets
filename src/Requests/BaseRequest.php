@@ -13,7 +13,5 @@ interface BaseRequest
 
     public function setDefaults(): void;
 
-    public function sendRequest(): ResponseInterface;
-
-    public function toArray(): array;
+    public function send(): BaseResponse;
 }

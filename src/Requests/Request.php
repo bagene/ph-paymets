@@ -3,7 +3,7 @@
 namespace Bagene\PhPayments\Requests;
 
 use Bagene\PhPayments\Exceptions\RequestException;
-use Bagene\PhPayments\Xendit\Models\XenditInvoiceResponse;
+use Bagene\PhPayments\Helpers\ResponseFactory;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -28,7 +28,7 @@ abstract class Request implements BaseRequest
         $this->setHeaders($headers);
         $this->setBody($body);
         $this->setDefaults();
-        $this->setRequireFields();
+        $this->requiredFields = $this->getRequiredFields();
         $this->endpoint = $this->getEndpoint();
         $this->method = $this->getMethod();
     }
@@ -38,9 +38,9 @@ abstract class Request implements BaseRequest
     abstract function getEndpoint(): string;
     abstract function getMethod(): string;
 
-    protected function setRequireFields(): void
+    protected function getRequiredFields(): array
     {
-        $this->requiredFields = [];
+        return [];
     }
 
     public function setHeaders(array $headers): void
@@ -70,7 +70,7 @@ abstract class Request implements BaseRequest
      * @throws ClientException
      * @throws GuzzleException
      */
-    public function sendRequest(): ResponseInterface
+    protected function sendRequest(): ResponseInterface
     {
         $this->validate(...$this->requiredFields);
 
@@ -92,6 +92,26 @@ abstract class Request implements BaseRequest
     }
 
     /**
+     * @return BaseResponse
+     * @throws RequestException
+     * @throws GuzzleException
+     */
+    public function send(): BaseResponse
+    {
+        $this->validate(...$this->requiredFields);
+
+        $response = $this->sendRequest();
+
+        $responseClass = $this->getResponseClass();
+        return ResponseFactory::createResponse($responseClass, $response);
+    }
+
+    protected function getResponseClass(): string
+    {
+        return str_replace('Request', 'Response', static::class);
+    }
+
+    /**
      * @throws RequestException
      */
     public function validate(string ...$fields): void
@@ -105,18 +125,7 @@ abstract class Request implements BaseRequest
 
         if (!empty($errors)) {
             $errorFields = implode(', ', $errors);
-            throw new RequestException("Missing required fields: {$errorFields}");
+            throw new RequestException("Missing required fields: {$errorFields}", 422);
         }
-    }
-
-    /**
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    abstract public function send(): ?BaseResponse;
-
-    public function toArray(): array
-    {
-        return $this->body;
     }
 }

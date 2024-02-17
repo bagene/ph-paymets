@@ -1,9 +1,8 @@
 <?php
 
-namespace Bagene\PhPayments\Tests\Unit;
+namespace Bagene\PhPayments\Tests\Integration;
 
 use Bagene\PhPayments\Helpers\PaymentBuilder;
-use Bagene\PhPayments\PaymentGateway;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\PhPayments;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
