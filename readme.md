@@ -44,7 +44,7 @@ use Bagene\PhPayments\Helpers\PaymentBuilder;
 public function xenditWebhook(Request $request)
 {
     $gateway = PaymentBuilder::setGateway('xendit');
-    $response = $gateway->parseWebhookPayload($request->all());
+    $response = $gateway->parseWebhookPayload($request);
     
     // Do something with the response
 }
