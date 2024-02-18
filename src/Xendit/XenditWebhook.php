@@ -7,5 +7,5 @@ use Illuminate\Http\Response;
 
 abstract class XenditWebhook implements XenditWebhookInterface
 {
-    abstract public function handle(array $payload): ?Response;
+    abstract public function handle(array $payload): mixed;
 }

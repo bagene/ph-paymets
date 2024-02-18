@@ -7,5 +7,10 @@ use Illuminate\Http\Response;
 
 interface WebhookControllerInterface
 {
-    public function parse(Request $request): ?Response;
+    /**
+     * Handle the incoming webhook.
+     *
+     * @throws \Exception
+     */
+    public function parse(Request $request): mixed;
 }

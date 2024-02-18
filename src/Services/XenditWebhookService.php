@@ -11,7 +11,7 @@ class XenditWebhookService extends XenditWebhook implements XenditWebhookInterfa
     /**
      * @inheritDoc
      */
-    public function handle(array $payload): ?Response
+    public function handle(array $payload): mixed
     {
         // TODO: Implement updateStatus() method.
         // add your transactions after parsing webhook here

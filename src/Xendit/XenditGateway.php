@@ -107,6 +107,7 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
         }
 
         $webhookId = $request->get('webhook-id');
+
         $this->cacheWebhookId('xendit-webhook-'.$webhookId);
         return $request->all();
     }

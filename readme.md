@@ -43,7 +43,69 @@ createQrCode(string $id) - If supported
 ```
 
 ## Webhooks
-- Under Construction
+```php
+use Bagene\PhPayments\Helpers\PaymentBuilder;
+
+public function xenditWebhook(Request $request)
+{
+    $gateway = PaymentBuilder::setGateway('xendit');
+    $response = $gateway->webhook($request->all());
+    
+    // Do something with the response
+}
+```
+Alternatively, you can use the `xendit-webhook` route and Controller to handle the webhook.
+```
+php artisan vendor:publish --tag=ph-payments-routes
+php artisan vendor:publish --tag=ph-payments-services
+```
+After publishing the routes, you can add the route to your `routes/payments.php` file and the Service folder.
+You can then use the `Services/WebhookService.php` to handle the webhook.
+
+`routes/payments`
+```php
+<?php
+
+use Bagene\PhPayments\Controllers\XenditWebhookController;
+use Illuminate\Support\Facades\Route;
+
+Route::post(
+    '/webhooks/{provider}/invoice',
+    [XenditWebhookController::class, 'parse']
+)->name('xendit.invoice.create');
+```
+You can change the endpoint to you liking and register the route.
+
+`Services/WebhookService.php`
+
+```php
+<?php
+
+namespace App\Services;
+
+use Bagene\PhPayments\Xendit\XenditWebhook;
+use Bagene\PhPayments\Xendit\XenditWebhookInterface;
+use Illuminate\Http\JsonResponse;
+use App\Models\TestOrder;
+
+class XenditWebhookService extends XenditWebhook implements XenditWebhookInterface
+{
+
+    public function handle(array $payload): JsonResponse
+    {
+        TestOrder::query()
+            ->where('reference', $payload['external_id'])
+            ->update([
+                'status' => strtolower($payload['status'])
+            ]);
+
+        return response()->json([
+            'status' => 'ok'
+        ]);
+    }
+}
+
+```
 
 ## Supported Gateways
 - Xendit 

@@ -14,13 +14,13 @@ class PhPaymentServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/config/payments.php' => config_path('payments.php'),
-        ], 'config');
+        ], 'ph-payments-config');
         $this->publishes([
             __DIR__ . '/routes/payments.php' => base_path('routes/payments.php'),
-        ], 'routes');
+        ], 'ph-payments-routes');
         $this->publishes([
             __DIR__ . '/Services/' => app_path('Services/'),
-        ], 'services');
+        ], 'ph-payments-services');
     }
 
     public function register(): void

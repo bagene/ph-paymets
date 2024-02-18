@@ -18,7 +18,11 @@ class XenditWebhookController extends Controller implements WebhookControllerInt
         $this->gateway = app(XenditGatewayInterface::class);
         $this->webhook = app(XenditWebhookInterface::class);
     }
-    public function parse(Request $request): ?Response
+
+    /**
+     * @inheritDoc
+     */
+    public function parse(Request $request): mixed
     {
         $data = $this->gateway->parseWebhookPayload($request);
 
