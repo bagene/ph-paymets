@@ -3,6 +3,8 @@
 namespace Bagene\PhPayments;
 
 use App\Services\XenditWebhookService;
+use Bagene\PhPayments\Maya\MayaGateway;
+use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\Xendit\XenditGateway;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Bagene\PhPayments\Xendit\XenditWebhookInterface;
@@ -27,5 +29,7 @@ class PhPaymentServiceProvider extends ServiceProvider
     {
         $this->app->bind(XenditGatewayInterface::class, XenditGateway::class);
         $this->app->bind(XenditWebhookInterface::class, XenditWebhookService::class);
+
+        $this->app->bind(MayaGatewayInterface::class, MayaGateway::class);
     }
 }

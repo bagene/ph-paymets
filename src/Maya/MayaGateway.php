@@ -19,8 +19,8 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
     final public function __construct(?Client $client = null)
     {
         parent::__construct($client);
-        $this->publicKey = config('payments.maya.public_key');
-        $this->secretKey = config('payments.maya.secret_key');
+        $this->publicKey = config('payments.maya.public_key') ?? '';
+        $this->secretKey = config('payments.maya.secret_key') ?? '';
         $this->authenticate();
     }
 

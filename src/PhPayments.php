@@ -19,4 +19,14 @@ final class PhPayments
                 throw new \InvalidArgumentException("Invalid gateway: $gateway");
         }
     }
+
+    public function getXendidGateway(): XenditGatewayInterface
+    {
+        return app(XenditGatewayInterface::class);
+    }
+
+    public function getMayaGateway(): MayaGatewayInterface
+    {
+        return app(MayaGatewayInterface::class);
+    }
 }

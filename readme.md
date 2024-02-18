@@ -12,7 +12,8 @@ php artisan vendor:publish --tag="ph-payments-config"
 ```php
 use Bagene\PhPayments\Helpers\PaymentBuilder;
 
-$gateway = PaymentBuilder::setGateway('xendit');
+$gateway = PaymentBuilder::getMayaGateway();
+$gateway = PaymentBuilder::getXendidGateway();
 
 $response = $gateway->createInvoice([
     'external_id' => 'invoice-123',
@@ -43,7 +44,7 @@ use Bagene\PhPayments\Helpers\PaymentBuilder;
 
 public function xenditWebhook(Request $request)
 {
-    $gateway = PaymentBuilder::setGateway('xendit');
+    $gateway = PaymentBuilder::getXendidGateway();
     $response = $gateway->parseWebhookPayload($request);
     
     // Do something with the response

@@ -9,7 +9,9 @@ use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static XenditGatewayInterface|MayaGatewayInterface setGateway(string $string)
+ * @method static PaymentGatewayInferface|XenditGatewayInterface setGateway(string $string)
+ * @method static XenditGatewayInterface getXendidGateway()
+ * @method static MayaGatewayInterface getMayaGateway()
  * @method static setAttribute(string $name, mixed $value)
  * @method static setAttributes(array $attributes)
  *
