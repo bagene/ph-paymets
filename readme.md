@@ -3,14 +3,9 @@
 composer require "bagene/ph-payments"
 ```
 
-## Laravel Assets
-```bash
-php artisan vendor:publish --provider="Bagene\PhPayments\PhPaymentsServiceProvider"
-```
-
 ## Configuration
 ```bash
-php artisan vendor:publish --provider="Bagene\PhPayments\PhPaymentsServiceProvider" --tag="config"
+php artisan vendor:publish --tag="ph-payments-config"
 ```
 
 ## Usage
