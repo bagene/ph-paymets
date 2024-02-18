@@ -8,7 +8,10 @@ use Illuminate\Http\Response;
 
 class XenditWebhookService extends XenditWebhook implements XenditWebhookInterface
 {
-    public function handle($payload): ?Response
+    /**
+     * @inheritDoc
+     */
+    public function handle(array $payload): ?Response
     {
         // TODO: Implement updateStatus() method.
         // add your transactions after parsing webhook here

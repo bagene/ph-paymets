@@ -6,6 +6,29 @@ use Bagene\PhPayments\Requests\BaseResponse;
 use Bagene\PhPayments\Requests\Response;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @property-read array{
+ *     id: string,
+ *     external_id: string,
+ *     status: string,
+ *     merchant_name: string,
+ *     amount: float,
+ *     payer_email: string,
+ *     description: string,
+ *     expiry_date: string,
+ *     invoice_url: string,
+ *     currency: string,
+ *     created: string,
+ *     updated: string,
+ *     items: array{
+ *         name: string,
+ *         price: float,
+ *         quantity: int,
+ *         category: string,
+ *         url: string,
+ *     }[]|null,
+ * } $body
+ */
 class XenditInvoiceResponse extends Response implements BaseResponse
 {
     protected string $id;
@@ -20,7 +43,16 @@ class XenditInvoiceResponse extends Response implements BaseResponse
     protected string $currency;
     protected string $created;
     protected string $updated;
-    protected array $items;
+    /**
+     * @var array{
+     *     name: string,
+     *     price: float,
+     *     quantity: int,
+     *     category: string,
+     *     url: string,
+     * }[]|null $items
+     */
+    protected ?array $items;
 
     protected function setResponse(ResponseInterface $response): void
     {
@@ -104,7 +136,16 @@ class XenditInvoiceResponse extends Response implements BaseResponse
         return $this->currency;
     }
 
-    public function getItems(): array
+    /**
+     * @return array{
+     *     name: string,
+     *     price: float,
+     *     quantity: int,
+     *     category: string,
+     *     url: string,
+     * }[]|null
+     */
+    public function getItems(): ?array
     {
         return $this->items;
     }

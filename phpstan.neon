@@ -1,0 +1,8 @@
+parameters:
+
+    # Level 9 is the highest but it's not accepting some of Laravel's abstraction
+    level: 8
+
+    paths:
+        - src
+        - tests

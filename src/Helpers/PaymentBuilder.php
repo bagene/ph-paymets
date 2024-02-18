@@ -2,13 +2,18 @@
 
 namespace Bagene\PhPayments\Helpers;
 
-use Bagene\PhPayments\PaymentGateway;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\PhPayments;
+use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static setGateway(string $string)
+ * @method static PaymentGatewayInferface|XenditGatewayInterface setGateway(string $string)
+ * @method static setAttribute(string $name, mixed $value)
+ * @method static setAttributes(array $attributes)
+ *
+ * @see PhPayments
+ * @see PaymentGatewayInferface
  */
 class PaymentBuilder extends Facade
 {

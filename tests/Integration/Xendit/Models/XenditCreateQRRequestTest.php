@@ -58,8 +58,16 @@ class XenditCreateQRRequestTest extends TestCase
         $this->assertEquals('IDR', $response->getCurrency());
         $this->assertEquals(100000, $response->getAmount()); }
 
-    /** @dataProvider provideInvalidData */
-    public function testCreateQRExpectExceptions($data, $errorMsg): void
+    /**
+     * @dataProvider provideInvalidData
+     * @param array{
+     *     reference_id?: string,
+     *     type?: string,
+     *     currency?: string,
+     * } $data
+     * @param string $errorMsg
+     */
+    public function testCreateQRExpectExceptions(array $data, string $errorMsg): void
     {
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage($errorMsg);
@@ -77,6 +85,15 @@ class XenditCreateQRRequestTest extends TestCase
         $request->send();
     }
 
+    /**
+     * @return array{
+     *     'empty': array{array{
+     *      reference_id?: string,
+     *      type?: string,
+     *      currency?: string,
+     *  }, string},
+     * }
+     */
     public static function provideInvalidData(): array
     {
         return [

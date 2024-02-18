@@ -8,7 +8,7 @@ use Illuminate\Foundation\Application;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @property Application|null $app
+ * @property Application $app
  * @method createMock(string $class)
  */
 trait ShouldMock
@@ -23,9 +23,12 @@ trait ShouldMock
             ->disableOriginalConstructor()
             ->getMock();
 
+        /** @var resource $file */
+        $file = fopen('data://text/plain,' . $response, 'r');
+
         $responseMock->expects($this->once())
             ->method('getBody')
-            ->willReturn(new Stream(fopen('data://text/plain,' . $response, 'r')));
+            ->willReturn(new Stream($file));
 
         $clientMock->expects($this->once())
             ->method('request')

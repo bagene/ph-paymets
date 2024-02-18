@@ -24,7 +24,7 @@ class XenditQRResponseTest extends TestCase
             'updated' => '2021-01-01T00:00:00.000Z',
             'basket' => [],
         ];
-        $response = new Response(200, [], json_encode($data));
+        $response = new Response(200, [], json_encode($data) ?: '{}');
 
         $xenditQRResponse = new XenditQrResponse($response);
 

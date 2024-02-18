@@ -10,6 +10,12 @@ final class ResponseFactory
 {
     public static function createResponse(string $responseClass, ResponseInterface $response): BaseResponse
     {
-        return new $responseClass($response);
+        $object = new $responseClass($response);
+
+        if (!$object instanceof Response) {
+            throw new \InvalidArgumentException('Response class must be an instance of ' . Response::class);
+        }
+
+        return $object;
     }
 }

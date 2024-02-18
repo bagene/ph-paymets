@@ -27,6 +27,13 @@ interface XenditGatewayInterface extends PaymentGatewayInferface
 
     /**
      * Create QR
+     * @param array{
+     *     reference_id: string,
+     *     type: string,
+     *     currency: string,
+     *     amount?: int,
+     *     ...
+     * } $data
      * @throws RequestException
      * @throws GuzzleException
      */

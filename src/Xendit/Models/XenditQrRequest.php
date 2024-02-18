@@ -4,6 +4,16 @@ namespace Bagene\PhPayments\Xendit\Models;
 
 use Bagene\PhPayments\Requests\Request;
 
+/**
+ * Xendit QR Request
+ * @link https://xendit.github.io/apireference/?shell#qr-codes
+ * @property-read array{
+ *     reference_id: string,
+ *     type: string,
+ *     currency: string,
+ *     amount?: int,
+ * } $body
+ */
 class XenditQrRequest extends Request implements XenditRequestInterface
 {
     public function setDefaults(): void
@@ -26,6 +36,9 @@ class XenditQrRequest extends Request implements XenditRequestInterface
         return 'POST';
     }
 
+    /**
+     * @return string[]
+     */
     protected function getRequiredFields(): array
     {
         return [

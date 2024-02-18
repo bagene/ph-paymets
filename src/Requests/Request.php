@@ -16,12 +16,20 @@ abstract class Request implements BaseRequest
     protected ClientInterface $client;
     protected string $endpoint;
     protected string $method;
+    /** @var array<string, string> $headers */
     protected array $headers;
+    /** @var array<string, mixed> $body  */
     protected array $body = [];
+    /** @var array<string, string>|array<string, list<mixed|null>> $defaults */
     protected array $defaults;
 
+    /** @var string[] $requiredFields */
     public array $requiredFields;
 
+    /**
+     * @param array<string, string> $headers
+     * @param array<string, mixed> $body
+     */
     public function __construct(array $headers, array $body)
     {
         $this->client = app(Client::class);
@@ -38,12 +46,14 @@ abstract class Request implements BaseRequest
     abstract function getEndpoint(): string;
     abstract function getMethod(): string;
 
+    /** @return string[] */
     protected function getRequiredFields(): array
     {
         return [];
     }
 
-    public function setHeaders(array $headers): void
+    /** @param array<string, string> $headers */
+    protected function setHeaders(array $headers): void
     {
         $this->headers = $headers;
     }
@@ -53,11 +63,13 @@ abstract class Request implements BaseRequest
         return $this->headers;
     }
 
-    public function setBody(array $body): void
+    /** @param array<string, mixed> $body */
+    protected function setBody(array $body): void
     {
         $this->body = $body;
     }
 
+    /** @return array<string, mixed> */
     public function getBody(): array
     {
         return $this->body;

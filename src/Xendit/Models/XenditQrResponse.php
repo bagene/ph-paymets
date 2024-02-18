@@ -4,8 +4,40 @@ namespace Bagene\PhPayments\Xendit\Models;
 
 use Bagene\PhPayments\Requests\BaseResponse;
 use Bagene\PhPayments\Requests\Response;
+use http\Url;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Xendit QR Response
+ * @link https://xendit.github.io/apireference/?shell#qr-code
+ * @property-read array{
+ *     id: string,
+ *     reference_id: string,
+ *     type: string,
+ *     currency: string,
+ *     amount: float,
+ *     status: string,
+ *     channel_code: string,
+ *     qr_string: string,
+ *     expires_at: string,
+ *     created: string,
+ *     updated: string,
+ *     basket: array{
+ *     reference_id: string,
+ *     name: string,
+ *     category: string,
+ *     currency: string,
+ *     price: float,
+ *     quantity: int,
+ *     type: string,
+ *     url: string,
+ *     description: string,
+ *     sub-category: string,
+ *     metadata: array{...},
+ *     }|null,
+ *     ...
+ * } $body
+ */
 class XenditQrResponse extends Response implements BaseResponse
 {
     public string $id;
@@ -19,7 +51,20 @@ class XenditQrResponse extends Response implements BaseResponse
     public string $expiresAt;
     public string $created;
     public string $updated;
-    public array $basket;
+    /** @var array{
+     * reference_id: string,
+     * name: string,
+     * category: string,
+     * currency: string,
+     * price: float,
+     * quantity: int,
+     * type: string,
+     * url: string,
+     * description: string,
+     * sub-category: string,
+     * metadata: array{...},
+     * }|null $basket */
+    public ?array $basket;
     protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
@@ -93,7 +138,22 @@ class XenditQrResponse extends Response implements BaseResponse
         return $this->updated;
     }
 
-    public function getBasket(): array
+    /**
+     * @return array{
+     * reference_id: string,
+     * name: string,
+     * category: string,
+     * currency: string,
+     * price: float,
+     * quantity: int,
+     * type: string,
+     * url: string,
+     * description: string,
+     * sub-category: string,
+     * metadata: array{...},
+     * }|null
+     */
+    public function getBasket(): ?array
     {
         return $this->basket;
     }

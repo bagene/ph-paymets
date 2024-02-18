@@ -11,6 +11,7 @@ use Bagene\PhPayments\Xendit\Models\XenditGetInvoiceResponse;
 use Bagene\PhPayments\Xendit\Models\XenditQrRequest;
 use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 
 final class XenditGateway extends PaymentGateway implements XenditGatewayInterface
@@ -18,14 +19,17 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
     public string $secretKey;
     public string $webhookKey;
     public string $apiKey;
-    final public function __construct(array $args = [], ?Client $client = null)
+    final public function __construct(?Client $client = null)
     {
-        parent::__construct($args, $client);
-        $this->secretKey = config('payments.xendit.secret_key') ?? $args['secret_key'] ?? '';
-        $this->webhookKey = config('payments.xendit.webhook_token') ?? $args['webhook_token'] ?? '';
+        parent::__construct($client);
+        $this->secretKey = config('payments.xendit.secret_key') ?? '';
+        $this->webhookKey = config('payments.xendit.webhook_token') ?? '';
         $this->authenticate();
     }
 
+    /**
+     * @return array{Authorization: string, Content-Type: string}
+     */
     public function getHeaders(): array
     {
         return [
@@ -52,7 +56,18 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
         return $response;
     }
 
-    final public function createInvoice(?array $data = []): XenditCreateInvoiceResponse
+    /**
+     * @param array{
+     *     amount: int,
+     *     currency: string,
+     *     external_id: string,
+     *     ...
+     * }|array{} $data
+     * @return XenditCreateInvoiceResponse
+     * @throws RequestException
+     * @throws GuzzleException
+     */
+    final public function createInvoice(array $data = []): XenditCreateInvoiceResponse
     {
         $request = new XenditCreateInvoiceRequest(
             $this->getHeaders(),
@@ -65,24 +80,27 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
         return $response;
     }
 
-    final protected function verifyWebhook(array|Request $request, ?array $headers = []): array
+    /**
+     * @return array<string, list<string|null>>
+     * @throws RequestException
+     */
+    final protected function verifyWebhook(Request $request): array
     {
-        if (
-            empty($request->headers->get(static::WEBHOOK_HEADER_KEYS))
-            && empty($headers[static::WEBHOOK_HEADER_KEYS])
+        if (empty($request->headers->get(self::WEBHOOK_HEADER_KEYS))
         ) {
-            throw new RequestException('Missing required header: x-callback-token');
+            throw new RequestException('Missing required header: '.self::WEBHOOK_HEADER_KEYS);
         }
 
         return $request->headers->all();
     }
 
     /**
+     * @return array<string, mixed>
      * @throws RequestException
      */
-    final public function parseWebhookPayload(array|Request $request, ?array $headers = []): array
+    final public function parseWebhookPayload(Request $request): array
     {
-        $headers = $this->verifyWebhook($request, $headers);
+        $headers = $this->verifyWebhook($request);
 
         if ($headers['x-callback-token'][0] != $this->webhookKey) {
             throw new RequestException('Invalid webhook token');
@@ -93,6 +111,7 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
         return $request->all();
     }
 
+    /** @inheritDoc */
     public function createQR(array $data): XenditQrResponse
     {
         $request = new XenditQrRequest(

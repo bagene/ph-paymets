@@ -5,6 +5,11 @@ namespace Bagene\PhPayments\Maya\Models;
 use Bagene\PhPayments\Requests\Response;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @property-read array{
+ *     redirectUrl: string
+ * } $body
+ */
 abstract class MayaInvoiceResponse extends Response
 {
     protected string $redirectUrl;

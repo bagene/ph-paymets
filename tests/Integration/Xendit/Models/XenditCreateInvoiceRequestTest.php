@@ -57,8 +57,11 @@ class XenditCreateInvoiceRequestTest extends TestCase
         $this->assertEquals('invoice-external-id', $response->getExternalId());
     }
 
-    /** @dataProvider provideInvalidData */
-    public function testCreateInvoiceRequestExpectException(array $data, $errorMsg): void
+    /**
+     * @dataProvider provideInvalidData
+     * @param array{reference_id?: string, type?: string} $data
+     */
+    public function testCreateInvoiceRequestExpectException(array $data, string $errorMsg): void
     {
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage($errorMsg);
@@ -76,6 +79,12 @@ class XenditCreateInvoiceRequestTest extends TestCase
         $request->send();
     }
 
+    /**
+     * @return array<string, array{0: array{
+     *     reference_id?: string,
+     *     type?: string,
+     * }, 1: string}>
+     */
     public static function provideInvalidData(): array
     {
         return [

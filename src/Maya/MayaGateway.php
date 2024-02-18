@@ -16,11 +16,11 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
     protected string $publicKey;
     protected string $secretKey;
     protected string $apiKey;
-    final public function __construct(array $args = [], ?Client $client = null)
+    final public function __construct(?Client $client = null)
     {
-        parent::__construct($args, $client);
-        $this->publicKey = config('payments.maya.public_key') ?? $args['public_key'] ?? '';
-        $this->secretKey = config('payments.maya.secret_key') ?? $args['secret_key'] ?? '';
+        parent::__construct($client);
+        $this->publicKey = config('payments.maya.public_key');
+        $this->secretKey = config('payments.maya.secret_key');
         $this->authenticate();
     }
 
@@ -29,6 +29,9 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
         $this->apiKey = base64_encode($this->publicKey . ':' . $this->secretKey);
     }
 
+    /**
+     * @return array{Authorization: string, Content-Type: string}
+     */
     public function getHeaders(): array
     {
         return [
@@ -38,10 +41,17 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
     }
 
     /**
+     * @param array{
+     *     amount: int,
+     *     currency: string,
+     *     external_id: string,
+     *     ...
+     * }|array{} $data
+     * @return MayaInvoiceResponse
      * @throws RequestException
      * @throws GuzzleException
      */
-    public function createInvoice(?array $data = []): MayaInvoiceResponse
+    public function createInvoice(array $data = []): MayaInvoiceResponse
     {
         $request = new MayaCreateInvoiceRequest($this->getHeaders(), $data);
         return $request->send();
@@ -52,13 +62,19 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
         return null;
     }
 
-    public function verifyWebhook(array|Request $request, ?array $headers = []): array
+    /**
+     * @return array<string, list<string|null>>
+     */
+    public function verifyWebhook(Request $request): array
     {
         // TODO: Implement verifyWebhook() method.
         return [];
     }
 
-    public function parseWebhookPayload(array|Request $request, ?array $headers = []): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function parseWebhookPayload(Request $request): array
     {
         // TODO: Implement parseWebhookPayload() method.
         return [];

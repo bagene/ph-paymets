@@ -4,6 +4,11 @@ namespace Bagene\PhPayments\Maya\Models;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @property-read array{
+ *     checkoutId: string
+ * } $body
+ */
 final class MayaCheckoutResponse extends MayaInvoiceResponse
 {
     protected string $checkoutId;

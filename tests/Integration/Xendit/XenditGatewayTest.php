@@ -4,6 +4,7 @@ namespace Bagene\PhPayments\Tests\Integration\Xendit;
 
 use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\Helpers\PaymentBuilder;
+use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\Tests\Factories\XenditTestFactory;
 use Bagene\PhPayments\Tests\ShouldMock;
 use Bagene\PhPayments\Xendit\Models\XenditCreateInvoiceResponse;
@@ -31,7 +32,10 @@ class XenditGatewayTest extends TestCase
         config(['payments.xendit.secret_key' => 'secret']);
         config(['payments.xendit.webhook_token' => 'token']);
 
-        $this->gateway = PaymentBuilder::setGateway('xendit');
+        /** @var XenditGatewayInterface $gateway */
+        $gateway = PaymentBuilder::setGateway('xendit');
+
+        $this->gateway = $gateway;
     }
 
     public function tearDown(): void
@@ -52,7 +56,10 @@ class XenditGatewayTest extends TestCase
     public function testAuthenticate(): void
     {
         $this->gateway->authenticate();
-        $this->assertEquals('c2VjcmV0Og==', $this->gateway->apiKey);
+        $this->assertEquals([
+            'Authorization' => 'Basic c2VjcmV0Og==',
+            'Content-Type' => 'application/json',
+        ], $this->gateway->getHeaders());
     }
 
     public function testGetInvoice(): void

@@ -6,7 +6,9 @@ use Psr\Http\Message\ResponseInterface;
 
 interface BaseResponse
 {
+    /** @return array<string, string>|array<int, list<string>> */
     public function getHeaders(): array;
 
-    public function getBody(): array;
+    /** @return array<string, mixed>|null */
+    public function getBody(): ?array;
 }

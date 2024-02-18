@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 interface PaymentGatewayInferface
 {
     public function setAttribute(string $name, mixed $value): PaymentGatewayInferface;
+    /** @param array<string, mixed> $attributes */
     public function setAttributes(array $attributes): PaymentGatewayInferface;
 
     /**
@@ -18,8 +19,12 @@ interface PaymentGatewayInferface
      * For Laravel, argument would be optional and will be filled with config('payments')
      * For non-Laravel, argument would be required
      */
-    public function __construct(array $args = [], ?Client $client = null);
-    public function getHeaders();
+    public function __construct(?Client $client = null);
+
+    /**
+     * @return array<string, string>
+     */
+    public function getHeaders(): array;
 
     /**
      * Authenticate to the gateway
@@ -35,13 +40,15 @@ interface PaymentGatewayInferface
     public function getInvoice(string $id = '', ?string $externalId = null): ?BaseResponse;
     /**
      * Create invoice
+     * @param array<string, mixed> $data
      * @throws RequestException
      * @throws GuzzleException
      */
-    public function createInvoice(?array $data = []): ?BaseResponse;
+    public function createInvoice(array $data = []): ?BaseResponse;
 
     /**
      * Validate and Parse Webhook payload
+     * @return array<string, mixed>
      */
-    public function parseWebhookPayload(Request|array $request, ?array $headers): array;
+    public function parseWebhookPayload(Request $request): array;
 }

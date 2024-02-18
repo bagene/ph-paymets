@@ -3,13 +3,15 @@
 namespace Bagene\PhPayments;
 
 use Bagene\PhPayments\Exceptions\RequestException;
+use Bagene\PhPayments\Maya\MayaGatewayInterface;
+use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 abstract class PaymentGateway implements PaymentGatewayInferface
 {
     protected Client $client;
-    public function __construct(array $args = [], ?Client $client = null)
+    public function __construct(?Client $client = null)
     {
         $this->client = $client ?? new Client();
     }
@@ -38,9 +40,12 @@ abstract class PaymentGateway implements PaymentGatewayInferface
         return $this;
     }
 
-    protected abstract function verifyWebhook(Request|array $request, ?array $headers = []): array;
+    /**
+     * @return array<string, list<string|null>>
+     */
+    protected abstract function verifyWebhook(Request $request): array;
 
-    public abstract function parseWebhookPayload(array|Request $request, ?array $headers = []): array;
+    public abstract function parseWebhookPayload(Request $request): array;
 
     /**
      * @throws RequestException

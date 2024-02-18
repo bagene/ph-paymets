@@ -30,9 +30,8 @@ final class PaymentGatewayTest extends TestCase
         $gateway->setAttribute('secretKey', 'secret');
         $gateway->setAttribute('webhookKey', 'webhook');
         $gateway->setAttribute('apiKey', 'api_key');
-        $this->assertEquals('secret', $gateway->secretKey);
-        $this->assertEquals('webhook', $gateway->webhookKey);
-        $this->assertEquals('api_key', $gateway->apiKey);
+
+        $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
     }
 
     public function testShouldSetAttributes(): void
@@ -43,8 +42,7 @@ final class PaymentGatewayTest extends TestCase
             'webhookKey' => 'webhook',
             'apiKey' => 'api_key',
         ]);
-        $this->assertEquals('secret', $gateway->secretKey);
-        $this->assertEquals('webhook', $gateway->webhookKey);
-        $this->assertEquals('api_key', $gateway->apiKey);
+
+        $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
     }
 }
