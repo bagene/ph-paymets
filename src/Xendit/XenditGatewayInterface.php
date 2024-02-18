@@ -5,6 +5,8 @@ namespace Bagene\PhPayments\Xendit;
 use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\Requests\BaseResponse;
+use Bagene\PhPayments\Xendit\Models\XenditCreateInvoiceResponse;
+use Bagene\PhPayments\Xendit\Models\XenditGetInvoiceResponse;
 use GuzzleHttp\Exception\GuzzleException;
 
 interface XenditGatewayInterface extends PaymentGatewayInferface
@@ -24,6 +26,20 @@ interface XenditGatewayInterface extends PaymentGatewayInferface
         'type'
     ];
     const WEBHOOK_HEADER_KEYS = 'x-callback-token';
+
+    /**
+     * Get invoice by ID or external ID
+     * @throws RequestException
+     * @throws GuzzleException
+     */
+    public function getInvoice(string $id = '', ?string $externalId = null): XenditGetInvoiceResponse;
+    /**
+     * Create invoice
+     * @param array<string, mixed> $data
+     * @throws RequestException
+     * @throws GuzzleException
+     */
+    public function createInvoice(array $data = []): XenditCreateInvoiceResponse;
 
     /**
      * Create QR
