@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace Bagene\PhPayments\Tests\Integration;
 
 use Bagene\PhPayments\Helpers\PaymentBuilder;
-use Bagene\PhPayments\Tests\PaymentsTestCase;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 
-final class PaymentGatewayTest extends TestCase
+final class PaymentGatewayTest extends \Bagene\PhPayments\Tests\TestCase
 {
+    use WithWorkbench;
     public function testShouldGetGateway(): void
     {
         $gateway = PaymentBuilder::setGateway('xendit');
