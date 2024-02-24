@@ -24,11 +24,6 @@ class Xendit implements Gateway
     {
     }
 
-    public function getGatewayName(): string
-    {
-        return 'Xendit';
-    }
-
     public function invoice(): self
     {
         $this->model = 'Invoice';

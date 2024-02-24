@@ -2,6 +2,7 @@
 
 namespace Bagene\PhPayments\Xendit\Models;
 
+use Bagene\PhPayments\Helpers\HostResolver;
 use Bagene\PhPayments\Requests\Request;
 
 /**
@@ -23,12 +24,10 @@ class XenditCreateQrRequest extends Request implements XenditRequestInterface
 
     public function getEndpoint(): string
     {
-        $host = static::PRODUCTION_BASE_URL;
-        if (config('payments.xendit.use_sandbox')) {
-            $host = static::SANDBOX_BASE_URL;
-        }
-
-        return $host . static::QR_ENDPOINT;
+        return HostResolver::resolve(
+            'Xendit',
+            boolval(config('payments.xendit.use_sandbox'))
+        ) . self::QR_ENDPOINT;
     }
 
     public function getMethod(): string

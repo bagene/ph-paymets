@@ -2,6 +2,7 @@
 
 namespace Bagene\PhPayments;
 
+use Bagene\PhPayments\Maya\Maya;
 use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\Xendit\Xendit;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
@@ -32,5 +33,13 @@ final class PhPayments
         $gateway = app(XenditGatewayInterface::class);
 
         return new Xendit($gateway);
+    }
+
+    public function maya(): Maya
+    {
+        /** @var MayaGatewayInterface $gateway */
+        $gateway = app(MayaGatewayInterface::class);
+
+        return new Maya($gateway);
     }
 }

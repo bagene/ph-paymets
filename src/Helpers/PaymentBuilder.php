@@ -2,6 +2,7 @@
 
 namespace Bagene\PhPayments\Helpers;
 
+use Bagene\PhPayments\Maya\Maya;
 use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\PhPayments;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static XenditGatewayInterface getXendidGateway()
  * @method static MayaGatewayInterface getMayaGateway()
  * @method static Xendit xendit()
+ * @method static Maya maya()
  * @method static setAttribute(string $name, mixed $value)
  * @method static setAttributes(array $attributes)
  *

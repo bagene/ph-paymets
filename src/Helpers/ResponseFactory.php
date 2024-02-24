@@ -15,7 +15,7 @@ final class ResponseFactory
             $response = new $responseClass($response);
 
             return $response;
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             throw new \InvalidArgumentException('Response class must be an instance of ' . Response::class);
         }
     }

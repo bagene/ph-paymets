@@ -40,7 +40,7 @@ trait HttpRequest
      * @param array<string, mixed>|array<list<mixed>>|array{} $payload
      * @throws MethodNotFoundException
      */
-    public function get(array $payload = []): BaseResponse
+    public function get(array|string $payload = []): BaseResponse
     {
         $this->method = 'Get';
         $request = $this->getRequestClass($payload);
@@ -52,9 +52,13 @@ trait HttpRequest
      * @param array<string, mixed>|array<list<mixed>>|array{} $payload
      * @throws MethodNotFoundException
      */
-    protected function getRequestClass(array $payload = []): BaseRequest
+    protected function getRequestClass(array|string $payload = []): BaseRequest
     {
         $className = $this->getRequestClassName();
+
+        if (is_string($payload)) {
+            $payload = ['id' => $payload];
+        }
 
         /** @var BaseRequest $request */
         $request = new $className($this->gateway->getHeaders(), $payload);
@@ -69,7 +73,7 @@ trait HttpRequest
      */
     protected function getRequestClassName(): string
     {
-        $prefix = 'Bagene\\PhPayments\\' . $this->getGatewayName() . '\\Models\\';
+        $prefix = 'Bagene\\PhPayments\\' . self::GATEWAY_NAME . '\\Models\\';
 
         $className = $prefix . self::GATEWAY_NAME . $this->method . $this->model . 'Request';
         if (!class_exists($className)) {

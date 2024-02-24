@@ -10,6 +10,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
+use function PHPUnit\Framework\stringContains;
 
 abstract class Request implements BaseRequest
 {
@@ -116,12 +117,17 @@ abstract class Request implements BaseRequest
      */
     public function send(): BaseResponse
     {
+        $this->extraRequest();
         $this->validate(...$this->requiredFields);
 
         $response = $this->sendRequest();
 
         $responseClass = $this->getResponseClass();
         return ResponseFactory::createResponse($responseClass, $response);
+    }
+
+    protected function extraRequest(): void
+    {
     }
 
     protected function getResponseClass(): string
@@ -136,6 +142,12 @@ abstract class Request implements BaseRequest
     {
         $errors = [];
         foreach ($fields as $field) {
+            if (str_contains($field, '.')) {
+                $nestedFields = explode('.', $field);
+                $this->validateNestedFields($this->body, $nestedFields, $errors);
+                continue;
+            }
+
             if (!array_key_exists($field, $this->body)) {
                 $errors[] = $field;
             }
@@ -144,6 +156,33 @@ abstract class Request implements BaseRequest
         if (!empty($errors)) {
             $errorFields = implode(', ', $errors);
             throw new RequestException("Missing required fields: {$errorFields}", 422);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<int, string> $nestedFields
+     * @param array<int, string> $errors
+     * @param int $index
+     * @return void
+     */
+    public function validateNestedFields(array $data, array $nestedFields, array &$errors, int $index = 0): void
+    {
+        $field = $nestedFields[$index];
+
+        if (!array_key_exists($field, $data)) {
+            $error = implode('.', array_slice($nestedFields, 0, $index + 1));
+            $errors[] = $error;
+            return;
+        }
+
+        if (count($nestedFields) > $index + 1) {
+            $this->validateNestedFields(
+                is_array($data[$field]) ? $data[$field] : [],
+                $nestedFields,
+                $errors,
+                $index + 1
+            );
         }
     }
 }

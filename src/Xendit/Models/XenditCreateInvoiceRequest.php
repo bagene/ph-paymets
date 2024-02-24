@@ -3,6 +3,7 @@
 namespace Bagene\PhPayments\Xendit\Models;
 
 use Bagene\PhPayments\Exceptions\RequestException;
+use Bagene\PhPayments\Helpers\HostResolver;
 use Bagene\PhPayments\Requests\BaseResponse;
 use Bagene\PhPayments\Requests\Request;
 use GuzzleHttp\Exception\GuzzleException;
@@ -36,12 +37,10 @@ class XenditCreateInvoiceRequest extends Request implements XenditRequestInterfa
 
     public function getEndpoint(): string
     {
-        $host = static::PRODUCTION_BASE_URL;
-        if (config('payments.xendit.use_sandbox')) {
-            $host = static::SANDBOX_BASE_URL;
-        }
-
-        return $host . static::INVOICE_ENDPOINT;
+        return HostResolver::resolve(
+            'Xendit',
+            boolval(config('payments.xendit.use_sandbox'))
+        ) . self::INVOICE_ENDPOINT;
     }
 
     public function getMethod(): string

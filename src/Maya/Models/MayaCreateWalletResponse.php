@@ -7,25 +7,26 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @property-read array{
- *    checkoutId: string,
+ *    paymentId: string,
  *    redirectUrl: string
  * } $body
  */
-class MayaCheckoutResponse extends Response
+class MayaCreateWalletResponse extends Response
 {
-    protected string $checkoutId;
+    protected string $paymentId;
     protected string $redirectUrl;
+
     protected function setResponse(ResponseInterface $response): void
     {
         parent::setResponse($response);
 
-        $this->checkoutId = $this->body['checkoutId'];
+        $this->paymentId = $this->body['paymentId'];
         $this->redirectUrl = $this->body['redirectUrl'];
     }
 
-    public function getCheckoutId(): string
+    public function getPaymentId(): string
     {
-        return $this->checkoutId;
+        return $this->paymentId;
     }
 
     public function getRedirectUrl(): string

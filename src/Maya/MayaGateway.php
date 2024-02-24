@@ -46,28 +46,6 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
     }
 
     /**
-     * @param array{
-     *     amount: int,
-     *     currency: string,
-     *     external_id: string,
-     *     ...
-     * }|array{} $data
-     * @return MayaInvoiceResponse
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function createInvoice(array $data = []): MayaInvoiceResponse
-    {
-        $request = new MayaCreateInvoiceRequest($this->getHeaders(), $data);
-        return $request->send();
-    }
-
-    public function getInvoice(string $id = '', ?string $externalId = null): ?MayaInvoiceResponse
-    {
-        return null;
-    }
-
-    /**
      * @return array<string, list<string|null>>
      */
     public function verifyWebhook(Request $request): array

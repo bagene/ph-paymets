@@ -3,7 +3,9 @@
 declare(strict_types=1);
 namespace Bagene\PhPayments\Tests\Integration;
 
+use Bagene\PhPayments\Exceptions\MethodNotFoundException;
 use Bagene\PhPayments\Helpers\PaymentBuilder;
+use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
@@ -11,10 +13,16 @@ use Orchestra\Testbench\TestCase;
 final class PaymentGatewayTest extends \Bagene\PhPayments\Tests\TestCase
 {
     use WithWorkbench;
-    public function testShouldGetGateway(): void
+    public function testShouldSetXenditGateway(): void
     {
         $gateway = PaymentBuilder::setGateway('xendit');
         $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
+    }
+
+    public function testShouldSetMayaGateway(): void
+    {
+        $gateway = PaymentBuilder::setGateway('maya');
+        $this->assertInstanceOf(MayaGatewayInterface::class, $gateway);
     }
 
     public function testGetGatewayThrowInvalidArgumentException(): void
@@ -46,4 +54,14 @@ final class PaymentGatewayTest extends \Bagene\PhPayments\Tests\TestCase
 
         $this->assertInstanceOf(XenditGatewayInterface::class, $gateway);
     }
+
+    public function testMethodNotFound(): void
+    {
+        $this->expectException(MethodNotFoundException::class);
+        $this->expectExceptionMessage('Method not found: GetRequest');
+
+        PaymentBuilder::xendit()
+            ->get();
+    }
+
 }

@@ -2,8 +2,6 @@
 
 namespace Bagene\PhPayments\Xendit\Models;
 
-use Bagene\PhPayments\Requests\BaseRequest;
-
 interface XenditRequestInterface
 {
     const PAYMENT_GATEWAY_NAME = 'xendit';

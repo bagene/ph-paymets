@@ -13,7 +13,10 @@ use Psr\Http\Message\ResponseInterface;
  */
 trait ShouldMock
 {
-    protected function mockResponse(string $response): void
+    /**
+     * @param string|array<int, string> $responses
+     */
+    protected function mockResponse(string|array $responses): void
     {
         $clientMock = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
@@ -23,21 +26,40 @@ trait ShouldMock
             ->disableOriginalConstructor()
             ->getMock();
 
-        /** @var resource $file */
-        $file = fopen('data://text/plain,' . $response, 'r');
+        $rensponseMocks = [];
 
-        $responseMock->expects($this->once())
-            ->method('getBody')
-            ->willReturn(new Stream($file));
+        if (is_array($responses)) {
+            foreach ($responses as $response) {
+                $rensponseMocks[] = $this->getMockResponse($response);
+            }
+        } else {
+            $rensponseMocks[] = $this->getMockResponse($responses);
+        }
 
-        $clientMock->expects($this->once())
+        $clientMock->expects($this->atLeastOnce())
             ->method('request')
-            ->willReturn($responseMock);
+            ->willReturnOnConsecutiveCalls(...$rensponseMocks);
 
         $this->app->instance(Client::class, $clientMock);
         $this->app->bind(Client::class, function () use ($clientMock) {
             return $clientMock;
         });
+    }
+
+    private function getMockResponse(string $response): ResponseInterface
+    {
+        $responseMock = $this->getMockBuilder(ResponseInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var resource $file */
+        $file = fopen('data://text/plain,' . $response, 'r');
+
+        $responseMock->expects($this->atLeastOnce())
+            ->method('getBody')
+            ->willReturn(new Stream($file));
+
+        return $responseMock;
     }
 
     protected function mockResponseException(string $message, int $statusCode = 500): void

@@ -34,5 +34,8 @@
         <env name="XENDIT_SECRET_KEY" value="xnd_developm"/>
         <env name="XENDIT_WEBHOOK_TOKEN" value="test"/>
         <env name="XENDIT_IS_PRODUCTION" value="false" verbatim="true"/>
+        <env name="MAYA_PUBLIC_KEY" value="test"/>
+        <env name="MAYA_SECRET_KEY" value="test"/>
+        <env name="MAYA_IS_PRODUCTION" value="false" verbatim="true"/>
     </php>
 </phpunit>
