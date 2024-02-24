@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface;
  *     }[]|null,
  * } $body
  */
-class XenditInvoiceResponse extends Response implements BaseResponse
+class XenditInvoiceResponse extends Response
 {
     protected string $id;
     protected string $externalId;

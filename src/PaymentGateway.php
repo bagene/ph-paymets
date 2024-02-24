@@ -7,15 +7,10 @@ use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 abstract class PaymentGateway implements PaymentGatewayInferface
 {
-    protected Client $client;
-    public function __construct(?Client $client = null)
-    {
-        $this->client = $client ?? new Client();
-    }
-
     public function setAttribute(string $name, mixed $value): PaymentGatewayInferface
     {
         $reflection = new \ReflectionClass($this);
@@ -52,10 +47,10 @@ abstract class PaymentGateway implements PaymentGatewayInferface
      */
     public function cacheWebhookId(string $cacheKey = 'webhook'): void
     {
-        if (cache()->has($cacheKey)) {
+        if (Cache::has($cacheKey)) {
             throw new RequestException('Duplicate webhook');
         }
 
-        cache()->put($cacheKey, true, 60);
+        Cache::put($cacheKey, true, 60);
     }
 }

@@ -4,14 +4,7 @@ namespace Bagene\PhPayments\Xendit;
 
 use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\PaymentGateway;
-use Bagene\PhPayments\Xendit\Models\XenditCreateInvoiceRequest;
-use Bagene\PhPayments\Xendit\Models\XenditCreateInvoiceResponse;
-use Bagene\PhPayments\Xendit\Models\XenditGetInvoiceRequest;
-use Bagene\PhPayments\Xendit\Models\XenditGetInvoiceResponse;
-use Bagene\PhPayments\Xendit\Models\XenditQrRequest;
-use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 
 final class XenditGateway extends PaymentGateway implements XenditGatewayInterface
@@ -19,11 +12,16 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
     public string $secretKey;
     public string $webhookKey;
     public string $apiKey;
-    final public function __construct(?Client $client = null)
+    final public function __construct()
     {
-        parent::__construct($client);
-        $this->secretKey = config('payments.xendit.secret_key') ?? '';
-        $this->webhookKey = config('payments.xendit.webhook_token') ?? '';
+        /** @var string $secretKey */
+        $secretKey = config('payments.xendit.secret_key', '');
+        $this->secretKey = $secretKey;
+
+        /** @var string $webhookKey */
+        $webhookKey = config('payments.xendit.webhook_token', '');
+        $this->webhookKey = $webhookKey;
+
         $this->authenticate();
     }
 
@@ -41,43 +39,6 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
     final public function authenticate(): void
     {
         $this->apiKey = base64_encode($this->secretKey . ':');
-    }
-
-    final public function getInvoice(string $id = '', ?string $externalId = null): XenditGetInvoiceResponse
-    {
-        $request = new XenditGetInvoiceRequest(
-            $this->getHeaders(),
-            ['external_id' => $externalId]
-        );
-
-        /** @var XenditGetInvoiceResponse $response */
-        $response = $request->send();
-
-        return $response;
-    }
-
-    /**
-     * @param array{
-     *     amount: int,
-     *     currency: string,
-     *     external_id: string,
-     *     ...
-     * }|array{} $data
-     * @return XenditCreateInvoiceResponse
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    final public function createInvoice(array $data = []): XenditCreateInvoiceResponse
-    {
-        $request = new XenditCreateInvoiceRequest(
-            $this->getHeaders(),
-            $data
-        );
-
-        /** @var XenditCreateInvoiceResponse $response */
-        $response = $request->send();
-
-        return $response;
     }
 
     /**
@@ -110,19 +71,5 @@ final class XenditGateway extends PaymentGateway implements XenditGatewayInterfa
 
         $this->cacheWebhookId('xendit-webhook-'.$webhookId);
         return $request->all();
-    }
-
-    /** @inheritDoc */
-    public function createQR(array $data): XenditQrResponse
-    {
-        $request = new XenditQrRequest(
-            $this->getHeaders(),
-            $data,
-        );
-
-        /** @var XenditQrResponse $response */
-        $response = $request->send();
-
-        return $response;
     }
 }

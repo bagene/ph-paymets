@@ -14,7 +14,7 @@ use Bagene\PhPayments\Requests\Request;
  *     amount?: int,
  * } $body
  */
-class XenditQrRequest extends Request implements XenditRequestInterface
+class XenditCreateQrRequest extends Request implements XenditRequestInterface
 {
     public function setDefaults(): void
     {

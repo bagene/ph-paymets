@@ -32,7 +32,9 @@ abstract class Request implements BaseRequest
      */
     public function __construct(array $headers, array $body)
     {
-        $this->client = app(Client::class);
+        /** @var ClientInterface $client */
+        $client = app(Client::class);
+        $this->client = $client;
         $this->setHeaders($headers);
         $this->setBody($body);
         $this->setDefaults();
@@ -53,9 +55,11 @@ abstract class Request implements BaseRequest
     }
 
     /** @param array<string, string> $headers */
-    protected function setHeaders(array $headers): void
+    public function setHeaders(array $headers): self
     {
         $this->headers = $headers;
+
+        return $this;
     }
 
     public function getHeaders(): array
@@ -64,9 +68,11 @@ abstract class Request implements BaseRequest
     }
 
     /** @param array<string, mixed> $body */
-    protected function setBody(array $body): void
+    public function setBody(array $body): self
     {
         $this->body = $body;
+
+        return $this;
     }
 
     /** @return array<string, mixed> */

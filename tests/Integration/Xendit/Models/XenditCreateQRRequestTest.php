@@ -5,8 +5,8 @@ namespace Bagene\PhPayments\Tests\Integration\Xendit\Models;
 use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\Tests\Factories\XenditTestFactory;
 use Bagene\PhPayments\Tests\ShouldMock;
-use Bagene\PhPayments\Xendit\Models\XenditQrRequest;
-use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
+use Bagene\PhPayments\Xendit\Models\XenditCreateQrRequest;
+use Bagene\PhPayments\Xendit\Models\XenditCreateQrResponse;
 use Orchestra\Testbench\TestCase;
 
 class XenditCreateQRRequestTest extends TestCase
@@ -16,7 +16,7 @@ class XenditCreateQRRequestTest extends TestCase
     public function testCreateQRRequest(): void
     {
         $this->mockResponse(XenditTestFactory::QR_RESPONSE);
-        $request = new XenditQrRequest(
+        $request = new XenditCreateQrRequest(
             ['content-type' => 'application/json'],
             XenditTestFactory::CREATE_QR_DATA,
         );
@@ -27,7 +27,7 @@ class XenditCreateQRRequestTest extends TestCase
         $this->assertEquals(array_merge([], XenditTestFactory::CREATE_QR_DATA), $request->getBody());
 
         $response = $request->send();
-        $this->assertInstanceOf(XenditQrResponse::class, $response);
+        $this->assertInstanceOf(XenditCreateQrResponse::class, $response);
         $this->assertEquals('qr-id', $response->getId());
         $this->assertEquals('qr-reference-id', $response->getReferenceId());
         $this->assertEquals('DYNAMIC', $response->getType());
@@ -39,7 +39,7 @@ class XenditCreateQRRequestTest extends TestCase
     {
         $this->mockResponse(XenditTestFactory::QR_RESPONSE);
         config(['payments.xendit.use_sandbox' => true]);
-        $request = new XenditQrRequest(
+        $request = new XenditCreateQrRequest(
             ['content-type' => 'application/json'],
             XenditTestFactory::CREATE_QR_DATA,
         );
@@ -51,7 +51,7 @@ class XenditCreateQRRequestTest extends TestCase
 
         $response = $request->send();
         $this->assertEquals('https://api.xendit.co/qr_codes', $request->getEndpoint());
-        $this->assertInstanceOf(XenditQrResponse::class, $response);
+        $this->assertInstanceOf(XenditCreateQrResponse::class, $response);
         $this->assertEquals('qr-id', $response->getId());
         $this->assertEquals('qr-reference-id', $response->getReferenceId());
         $this->assertEquals('DYNAMIC', $response->getType());
@@ -72,7 +72,7 @@ class XenditCreateQRRequestTest extends TestCase
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage($errorMsg);
         $this->expectExceptionCode(422);
-        $request = new XenditQrRequest(
+        $request = new XenditCreateQrRequest(
             ['content-type' => 'application/json'],
             $data
         );

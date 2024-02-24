@@ -3,8 +3,8 @@
 namespace Bagene\PhPayments;
 
 use Bagene\PhPayments\Maya\MayaGatewayInterface;
+use Bagene\PhPayments\Xendit\Xendit;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
-use Illuminate\Http\Request;
 
 final class PhPayments
 {
@@ -12,21 +12,25 @@ final class PhPayments
     {
         switch ($gateway) {
             case 'xendit':
-                return app(XenditGatewayInterface::class);
+                /** @var XenditGatewayInterface $paymentGateway */
+                $paymentGateway = app(XenditGatewayInterface::class);
+                break;
             case 'maya':
-                return app(MayaGatewayInterface::class);
+                /** @var MayaGatewayInterface $paymentGateway */
+                $paymentGateway = app(MayaGatewayInterface::class);
+                break;
             default:
                 throw new \InvalidArgumentException("Invalid gateway: $gateway");
         }
+
+        return $paymentGateway;
     }
 
-    public function getXendidGateway(): XenditGatewayInterface
+    public function xendit(): Xendit
     {
-        return app(XenditGatewayInterface::class);
-    }
+        /** @var XenditGatewayInterface $gateway */
+        $gateway = app(XenditGatewayInterface::class);
 
-    public function getMayaGateway(): MayaGatewayInterface
-    {
-        return app(MayaGatewayInterface::class);
+        return new Xendit($gateway);
     }
 }

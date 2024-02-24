@@ -15,8 +15,13 @@ class XenditWebhookController extends Controller implements WebhookControllerInt
     protected XenditWebhookInterface $webhook;
     public function __construct()
     {
-        $this->gateway = app(XenditGatewayInterface::class);
-        $this->webhook = app(XenditWebhookInterface::class);
+        /** @var XenditGatewayInterface $gateway */
+        $gateway = app(XenditGatewayInterface::class);
+        $this->gateway = $gateway;
+
+        /** @var XenditWebhookInterface $webhook */
+        $webhook = app(XenditWebhookInterface::class);
+        $this->webhook = $webhook;
     }
 
     /**

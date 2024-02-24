@@ -58,7 +58,7 @@
             "@php vendor/bin/phpstan analyse"
         ],
         "test": [
-            "@php vendor/bin/phpunit"
+            "@php vendor/bin/phpunit --coverage-html coverage_report"
         ]
     }
 }

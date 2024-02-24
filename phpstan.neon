@@ -1,7 +1,6 @@
 parameters:
 
-    # Level 9 is the highest but it's not accepting some of Laravel's abstraction
-    level: 8
+    level: 9
 
     paths:
         - src

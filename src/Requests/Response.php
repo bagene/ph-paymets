@@ -4,11 +4,11 @@ namespace Bagene\PhPayments\Requests;
 
 use Psr\Http\Message\ResponseInterface;
 
-abstract class Response implements BaseResponse
+class Response implements BaseResponse
 {
     /** @var array<string, list<string|null>> $headers */
     protected array $headers = [];
-    /** @var array{...} $body */
+    /** @var array<string, mixed>|array<int, array<string, mixed>>|array{} $body */
     protected array $body = [];
 
     public function __construct(ResponseInterface $response)
@@ -19,7 +19,10 @@ abstract class Response implements BaseResponse
     protected function setResponse(ResponseInterface $response): void
     {
         $this->headers = $response->getHeaders();
-        $this->body = json_decode($response->getBody(), true) ?: [];
+
+        /** @var array<string, mixed>|array<int, array<string, mixed>>|array{} $body */
+        $body = json_decode($response->getBody(), true) ?: [];
+        $this->body = $body;
     }
 
     /** @return array<string, list<string|null>> */

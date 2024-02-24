@@ -12,17 +12,18 @@ php artisan vendor:publish --tag="ph-payments-config"
 ```php
 use Bagene\PhPayments\Helpers\PaymentBuilder;
 
-$gateway = PaymentBuilder::getMayaGateway();
-$gateway = PaymentBuilder::getXendidGateway();
+PaymentBuilder::xendit();
 
-$response = $gateway->createInvoice([
-    'external_id' => 'invoice-123',
-    'amount' => 100000,
-    'payer_email' => 'test@example.org',
-    'description' => 'Invoice #123',
-    'success_redirect_url' => 'https://example.org/success',
-    'failure_redirect_url' => 'https://example.org/failure',
-]);
+$response = PaymentBuilder::xendit()
+    ->invoice()
+    ->create([
+      'external_id' => 'invoice-123',
+      'amount' => 100000,
+      'payer_email' => 'test@example.org',
+      'description' => 'Invoice #123',
+      'success_redirect_url' => 'https://example.org/success',
+      'failure_redirect_url' => 'https://example.org/failure',
+  ]);
 
 dump($response->getId());
 dump($response->getExternalId());
@@ -33,9 +34,8 @@ return redirect()->away($response->getInvoiceUrl());
 ## Methods
 
 ```php
-createInvoice(array $data)
-getInvoice(string $id)
-createQrCode(string $id) - If supported
+invoice() ['create', 'get']
+qr() ['create'] - If supported
 ```
 
 ## Webhooks
@@ -106,10 +106,8 @@ class XenditWebhookService extends XenditWebhook implements XenditWebhookInterfa
 ## Supported Gateways
 - Xendit 
   - Supported Features: 
-    - Create Invoice
-    - Get Invoice
-    - Create QR Code
-    - Webhooks
+    - invoice (create, get)
+    - qr (create)
 - Maya - Under Consstruction
 
 ## License

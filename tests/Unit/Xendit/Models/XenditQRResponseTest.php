@@ -2,7 +2,7 @@
 
 namespace Bagene\PhPayments\Tests\Unit\Xendit\Models;
 
-use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
+use Bagene\PhPayments\Xendit\Models\XenditCreateQrResponse;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +26,7 @@ class XenditQRResponseTest extends TestCase
         ];
         $response = new Response(200, [], json_encode($data) ?: '{}');
 
-        $xenditQRResponse = new XenditQrResponse($response);
+        $xenditQRResponse = new XenditCreateQrResponse($response);
 
         $this->assertIsArray($xenditQRResponse->getHeaders());
         $this->assertIsArray($xenditQRResponse->getBody());

@@ -9,7 +9,7 @@ use Bagene\PhPayments\Tests\Factories\XenditTestFactory;
 use Bagene\PhPayments\Tests\ShouldMock;
 use Bagene\PhPayments\Xendit\Models\XenditCreateInvoiceResponse;
 use Bagene\PhPayments\Xendit\Models\XenditGetInvoiceResponse;
-use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
+use Bagene\PhPayments\Xendit\Models\XenditCreateQrResponse;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -40,7 +40,8 @@ class XenditGatewayTest extends TestCase
 
     public function tearDown(): void
     {
-        cache()->forget('xendit-webhook-id');
+
+        Cache::forget('xendit-webhook-id');
     }
 
     public function testGetHeaders(): void
@@ -62,39 +63,6 @@ class XenditGatewayTest extends TestCase
         ], $this->gateway->getHeaders());
     }
 
-    public function testGetInvoice(): void
-    {
-        $this->mockResponse(XenditTestFactory::INVOICE_RESPONSE);
-
-        $response = $this->gateway->getInvoice('', 'invoice-external-id');
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(XenditGetInvoiceResponse::class, $response);
-        $this->assertEquals('invoice-external-id', $response->getExternalId());
-    }
-
-    public function testCreateInvoice(): void
-    {
-        $this->mockResponse(XenditTestFactory::INVOICE_RESPONSE);
-
-        $response = $this->gateway->createInvoice(XenditTestFactory::CREATE_INVOICE_DATA);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(XenditCreateInvoiceResponse::class, $response);
-        $this->assertEquals('invoice-external-id', $response->getExternalId());
-    }
-
-    public function testCreateQR(): void
-    {
-        $this->mockResponse(XenditTestFactory::QR_RESPONSE);
-
-        $response = $this->gateway->createQR(XenditTestFactory::CREATE_QR_DATA);
-
-        $this->assertNotNull($response);
-        $this->assertInstanceOf(XenditQrResponse::class, $response);
-        $this->assertEquals('qr-reference-id', $response->getReferenceId());
-    }
-
     public function testParseWebhook(): void
     {
         $request = Request::create(
@@ -110,7 +78,7 @@ class XenditGatewayTest extends TestCase
         $this->assertIsArray($result);
         $this->assertArrayHasKey('webhook-id', $result);
         $this->assertEquals('id', $result['webhook-id']);
-        $this->assertTrue(cache()->has('xendit-webhook-id'));
+        $this->assertTrue(Cache::has('xendit-webhook-id'));
     }
 
     public function testParseWebhookThrowsException(): void
@@ -128,7 +96,7 @@ class XenditGatewayTest extends TestCase
 
         $this->gateway->parseWebhookPayload($request);
 
-        $this->assertFalse(cache()->has('xendit-webhook-id'));
+        $this->assertFalse(Cache::has('xendit-webhook-id'));
     }
 
     public function testParseWebhookThrowsExceptionMissingHeader(): void
@@ -143,7 +111,7 @@ class XenditGatewayTest extends TestCase
 
         $this->gateway->parseWebhookPayload($request);
 
-        $this->assertFalse(cache()->has('xendit-webhook-id'));
+        $this->assertFalse(Cache::has('xendit-webhook-id'));
     }
 
     public function testParseWebhookThrowsExceptionDuplicateWebhookId(): void
@@ -158,7 +126,7 @@ class XenditGatewayTest extends TestCase
         );
 
         $this->gateway->parseWebhookPayload($request);
-        $this->assertTrue(cache()->has('xendit-webhook-id'));
+        $this->assertTrue(Cache::has('xendit-webhook-id'));
 
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage('Duplicate webhook');

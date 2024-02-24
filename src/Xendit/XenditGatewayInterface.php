@@ -26,32 +26,4 @@ interface XenditGatewayInterface extends PaymentGatewayInferface
         'type'
     ];
     const WEBHOOK_HEADER_KEYS = 'x-callback-token';
-
-    /**
-     * Get invoice by ID or external ID
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function getInvoice(string $id = '', ?string $externalId = null): XenditGetInvoiceResponse;
-    /**
-     * Create invoice
-     * @param array<string, mixed> $data
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function createInvoice(array $data = []): XenditCreateInvoiceResponse;
-
-    /**
-     * Create QR
-     * @param array{
-     *     reference_id: string,
-     *     type: string,
-     *     currency: string,
-     *     amount?: int,
-     *     ...
-     * } $data
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function createQR(array $data): BaseResponse;
 }

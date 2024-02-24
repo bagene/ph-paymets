@@ -6,7 +6,7 @@ use Bagene\PhPayments\Exceptions\RequestException;
 use Bagene\PhPayments\Maya\Models\MayaCreateInvoiceRequest;
 use Bagene\PhPayments\Maya\Models\MayaInvoiceResponse;
 use Bagene\PhPayments\PaymentGateway;
-use Bagene\PhPayments\Xendit\Models\XenditQrResponse;
+use Bagene\PhPayments\Xendit\Models\XenditCreateQrResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
@@ -16,11 +16,16 @@ class MayaGateway extends PaymentGateway implements MayaGatewayInterface
     protected string $publicKey;
     protected string $secretKey;
     protected string $apiKey;
-    final public function __construct(?Client $client = null)
+    final public function __construct()
     {
-        parent::__construct($client);
-        $this->publicKey = config('payments.maya.public_key') ?? '';
-        $this->secretKey = config('payments.maya.secret_key') ?? '';
+        /** @var string $publicKey */
+        $publicKey = config('payments.maya.public_key', '');
+        $this->publicKey = $publicKey;
+
+        /** @var string $secretKey */
+        $secretKey = config('payments.maya.secret_key', '');
+        $this->secretKey = $secretKey;
+
         $this->authenticate();
     }
 

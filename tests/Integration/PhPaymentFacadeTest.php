@@ -2,11 +2,13 @@
 
 namespace Bagene\PhPayments\Tests\Integration;
 
+use Bagene\PhPayments\Gateway;
 use Bagene\PhPayments\Helpers\PaymentBuilder;
 use Bagene\PhPayments\Maya\MayaGatewayInterface;
 use Bagene\PhPayments\PaymentGatewayInferface;
 use Bagene\PhPayments\PhPayments;
 use Bagene\PhPayments\Tests\TestCase;
+use Bagene\PhPayments\Xendit\Xendit;
 use Bagene\PhPayments\Xendit\XenditGatewayInterface;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
@@ -64,13 +66,10 @@ class PhPaymentFacadeTest extends TestCase
         $this->assertInstanceOf(PaymentGatewayInferface::class, $gateway);
     }
 
-    public function testFacadeShouldReturnXenditGatewayInterface(): void
+    public function testXenditMethodShouldReturnXenditInstance(): void
     {
-        $this->assertInstanceOf(XenditGatewayInterface::class, PaymentBuilder::getXendidGateway());
+        $this->assertInstanceOf(Gateway::class, PaymentBuilder::xendit());
+        $this->assertInstanceOf(Xendit::class, PaymentBuilder::xendit());
     }
 
-    public function testFacadeShouldReturnMayaGatewayInterface(): void
-    {
-        $this->assertInstanceOf(MayaGatewayInterface::class, PaymentBuilder::getMayaGateway());
-    }
 }

@@ -38,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
  *     ...
  * } $body
  */
-class XenditQrResponse extends Response implements BaseResponse
+class XenditCreateQrResponse extends Response
 {
     public string $id;
     public string $referenceId;

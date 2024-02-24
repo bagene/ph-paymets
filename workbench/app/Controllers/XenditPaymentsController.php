@@ -2,6 +2,7 @@
 
 namespace Workbench\App\Controllers;
 
+use Bagene\PhPayments\Exceptions\MethodNotFoundException;
 use Bagene\PhPayments\Helpers\PaymentBuilder;
 use Bagene\PhPayments\Xendit\Models\XenditInvoiceResponse;
 use Illuminate\Http\RedirectResponse;
@@ -15,19 +16,24 @@ class XenditPaymentsController extends Controller
     {
         $data = $request->all();
 
-        $gateway = PaymentBuilder::setGateway('xendit');
-
         /** @var XenditInvoiceResponse $response */
-        $response = $gateway->createInvoice($data);
+        try {
+            $response = PaymentBuilder::xendit()
+                ->invoice()
+                ->create($data);
+        } catch (MethodNotFoundException $e) {
+            // Log error
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->away($response->getInvoiceUrl());
     }
 
     public function getPayment(): JsonResponse
     {
-        $gateway = PaymentBuilder::setGateway('xendit');
-
-        $response = $gateway->getInvoice('123');
+        $response = PaymentBuilder::xendit()
+            ->invoice()
+            ->get(['id' => '123']);
 
         return response()->json($response->getBody());
     }

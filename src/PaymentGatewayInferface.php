@@ -19,7 +19,7 @@ interface PaymentGatewayInferface
      * For Laravel, argument would be optional and will be filled with config('payments')
      * For non-Laravel, argument would be required
      */
-    public function __construct(?Client $client = null);
+    public function __construct();
 
     /**
      * @return array<string, string>
@@ -31,20 +31,6 @@ interface PaymentGatewayInferface
      * @return void
      */
     public function authenticate(): void;
-
-    /**
-     * Get invoice by ID or external ID
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function getInvoice(string $id = '', ?string $externalId = null): ?BaseResponse;
-    /**
-     * Create invoice
-     * @param array<string, mixed> $data
-     * @throws RequestException
-     * @throws GuzzleException
-     */
-    public function createInvoice(array $data = []): ?BaseResponse;
 
     /**
      * Validate and Parse Webhook payload

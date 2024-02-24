@@ -6,6 +6,7 @@ use Bagene\PhPayments\Tests\ShouldMock;
 use Bagene\PhPayments\Xendit\XenditWebhookInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Workbench\App\Models\TestOrder;
@@ -31,7 +32,7 @@ class XenditWebhookTest extends TestCase
 
     public function tearDown(): void
     {
-        cache()->flush();
+        Cache::flush();
     }
 
     protected function defineEnvironment($app)
@@ -81,7 +82,7 @@ class XenditWebhookTest extends TestCase
         $response->assertJson([
             'status' => 'ok',
         ]);
-        $this->assertTrue(cache()->has('xendit-webhook-1'));
+        $this->assertTrue(Cache::has('xendit-webhook-1'));
 
         /** @var TestOrder $order */
         $order = TestOrder::query()
@@ -109,7 +110,7 @@ class XenditWebhookTest extends TestCase
         ]);
 
         $response->assertStatus(500);
-        $this->assertFalse(cache()->has('xendit-webhook-1'));
+        $this->assertFalse(Cache::has('xendit-webhook-1'));
 
         /** @var TestOrder $order */
         $order = TestOrder::query()
