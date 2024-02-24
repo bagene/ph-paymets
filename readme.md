@@ -108,7 +108,11 @@ class XenditWebhookService extends XenditWebhook implements XenditWebhookInterfa
   - Supported Features: 
     - invoice (create, get)
     - qr (create)
-- Maya - Under Consstruction
+- Maya
+  - Supported Features: 
+    - invoice (create, get)
+    - token (create, get)
+    - payment (create, get)
 
 ## License
 This package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
