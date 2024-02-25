@@ -46,4 +46,10 @@ final class Maya implements Gateway
         $this->model = 'Payment';
         return $this;
     }
+
+    public function customer(): self
+    {
+        $this->model = 'Customer';
+        return $this;
+    }
 }

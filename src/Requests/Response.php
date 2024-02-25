@@ -4,7 +4,7 @@ namespace Bagene\PhPayments\Requests;
 
 use Psr\Http\Message\ResponseInterface;
 
-class Response implements BaseResponse
+class Response extends AbstractModel implements BaseResponse
 {
     /** @var array<string, list<string|null>> $headers */
     protected array $headers = [];

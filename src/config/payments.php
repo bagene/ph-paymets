@@ -30,5 +30,6 @@ return [
         'is_production' => env('MAYA_IS_PRODUCTION', false),
         'public_key' => env('MAYA_PUBLIC_KEY'),
         'secret_key' => env('MAYA_SECRET_KEY'),
+        'use_kount' => env('MAYA_USE_KOUNT', false),
     ],
 ];

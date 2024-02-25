@@ -10,4 +10,5 @@ interface MayaRequest
     const WALLET_ENDPOINT = '/payby/v2/paymaya/payments';
     const TOKEN_ENDPOINT = 'payments/v1/payment-tokens';
     const PAYMENT_ENDPOINT = '/payments/v1/payments';
+    const CUSTOMER_ENDPOINT = '/payments/v1/customers';
 }

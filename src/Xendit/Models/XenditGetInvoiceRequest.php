@@ -14,12 +14,26 @@ class XenditGetInvoiceRequest extends Request implements XenditRequestInterface
         $this->defaults = [];
     }
 
+    /**
+     * @return string
+     * @throws RequestException
+     */
     public function getEndpoint(): string
     {
-        return HostResolver::resolve(
+        $endpoint = HostResolver::resolve(
             'Xendit',
             boolval(config('payments.xendit.use_sandbox'))
         ) . self::INVOICE_ENDPOINT;
+
+        if (isset($this->body['id'])) {
+            $endpoint .= '/' . $this->body['id'];
+        } elseif (isset($this->body['external_id'])) {
+            $endpoint .= '?external_id=' . $this->body['external_id'];
+        } else {
+            throw new RequestException('Either id or external_id is required');
+        }
+
+        return $endpoint;
     }
 
     public function getMethod(): string
